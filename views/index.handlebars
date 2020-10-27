@@ -11,7 +11,7 @@
 	</head>
 	<body>
 		<header>
-			<h1>Home</h1>
+			<h1>Hello!!!</h1>
 			{{#if authorised}}
 				<a href="/logout">Log out</a>
 			{{else}}
@@ -23,6 +23,13 @@
 		{{/if}}
 	<main>
 		<p>This is the home page. Users can see it without logging in.</p>
+		<ul>
+			{{#each news}}
+				<li>{{this.title}}</li>
+				<p>{{this.dateAdded}}</p>
+				<img src={{this.photo}}></img>
+			{{/each}}
+		</ul>
 		{{#if authorised}}
 			<p><a href="/secure">secure page</a></p>
 		{{/if}}

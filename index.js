@@ -1,7 +1,7 @@
 
 import Koa from 'koa'
-import serve from 'koa-static'
 import views from 'koa-views'
+import serve from 'koa-static'
 import session from 'koa-session'
 
 import { apiRouter } from './routes/routes.js'
