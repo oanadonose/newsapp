@@ -31,3 +31,6 @@ config.json
 *.c9
 
 *.sh
+
+templates.md
+public/images/
