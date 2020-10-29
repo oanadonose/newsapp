@@ -3,9 +3,10 @@ import Router from 'koa-router'
 import bodyParser from 'koa-body'
 
 const publicRouter = new Router()
-publicRouter.use(bodyParser({multipart:true}))
+publicRouter.use(bodyParser({ multipart: true }))
 
 import { Accounts } from '../modules/accounts.js'
+import { News } from '../modules/news.js'
 const dbName = 'website.db'
 
 /**
@@ -16,7 +17,15 @@ const dbName = 'website.db'
  */
 publicRouter.get('/', async ctx => {
 	try {
+		const news = await new News(dbName)
+		const newsArticles = await news.all()
+
+		ctx.hbs = {
+			news: newsArticles
+		}
+		
 		await ctx.render('index', ctx.hbs)
+		
 	} catch(err) {
 		await ctx.render('error', ctx.hbs)
 	}

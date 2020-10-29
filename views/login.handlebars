@@ -7,6 +7,7 @@
 		<title>Log In</title>
 		<meta name="description" content="form to add new books">
 		<meta name="author" content="Mark Tyers">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<link href="{{host}}/style.css" type="text/css" rel="stylesheet" />
 	</head>
 	<body>
@@ -19,14 +20,14 @@
 		{{/if}}
 		<main>
 		<form action="/login" method="post">
-			<p>
+			<div class="input">
 				<label for="user">Username</label><br />
 				<input type="text" name="user" placeholder="your username" value="{{body.user}}" autofocus>
-			</p>
-			<p>
+			</div>
+			<div class="input">
 				<label for="pass">Password</label><br />
 				<input type="password" name="pass" placeholder="your password" value="{{body.pass}}">
-			</p>
+			</div>
 			<input type="hidden" name="referrer" value="{{referrer}}">
 			<p><input type="submit" value="Log in"></p>
 		</form>

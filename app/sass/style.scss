@@ -1,0 +1,144 @@
+@import url('https://fonts.googleapis.com/css2?family=PT+Serif&display=swap');
+
+@mixin center-vertical {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+//homepage
+.feed {
+  width: 100%;
+  background-color: peach;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.article {
+  max-width: 20%;
+  margin: 1em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1em;
+  img {
+    max-width: 200px;
+    margin: 0.5em;
+  }
+  p {
+    font-size: 0.8em;
+    align-self: flex-end;
+  }
+}
+h2 {
+  font-size: 1.2em;
+  margin: 0;
+}
+header {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 1em;
+  
+  a {
+    font-size: 1.2em;
+    text-decoration: none;
+  }
+
+  h1 {
+	  font-size: 1.4em;
+  }
+}
+//end homepage
+
+//login/register
+main {
+	@include center-vertical;
+}
+form {
+	width:100%;
+	height:100%;
+	@include center-vertical;
+	form {
+		@include center-vertical;
+	}
+}
+.input {
+	@include center-vertical;
+	width: fit-content;
+	margin: 1em;
+	
+	input {
+		font-size: 1rem;
+		width: 15rem;
+		height: 5vh;
+		border-radius: 0.4em;
+		
+		text-align: center;
+	}
+}
+input[type="submit"] {
+	width: 10em;
+	height: 4vh;
+	border-radius: 0.4em;
+}
+
+/*
+html5doctor.com Reset Stylesheet
+v1.6.1
+Last Updated: 2010-09-17
+Author: Richard Clark - http://richclarkdesign.com
+Twitter: @rich_clark
+*/
+
+html, body {
+    font-size:17px;
+    font-family: 'PT Serif', serif;
+    vertical-align:baseline;
+    background:transparent;
+}
+
+body {
+    line-height:1;
+}
+
+p {
+	max-width: fit-content;
+	max-height: fit-content;
+}
+
+
+a {
+    margin:0;
+    padding:0;
+    background:transparent;
+}
+
+/* change colours to suit your needs */
+ins {
+    background-color:#ff9;
+    color:#000;
+    text-decoration:none;
+}
+
+/* change colours to suit your needs */
+mark {
+    background-color:#ff9;
+    color:#000;
+    font-style:italic;
+    font-weight:bold;
+}
+
+del {
+    text-decoration: line-through;
+}
+
+abbr[title], dfn[title] {
+    border-bottom:1px dotted;
+    cursor:help;
+}
+
+
