@@ -1,4 +1,24 @@
 @import url("https://fonts.googleapis.com/css2?family=PT+Serif&display=swap");
+header {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 1em;
+}
+header a {
+  text-decoration: none;
+  margin-right: 1em;
+}
+header h1 {
+  font-size: 1.4em;
+}
+
+.header-buttons {
+  display: flex;
+  flex-direction: row;
+}
+
 .feed {
   width: 100%;
   background-color: peach;
@@ -9,15 +29,18 @@
 }
 
 .article {
-  max-width: 20%;
   margin: 1em;
+  padding: 0.8em;
+  background-color: rgba(211, 211, 211, 0.4);
+  border-radius: 0.6em;
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 1em;
 }
 .article img {
-  max-width: 200px;
+  max-width: 45vw;
+  max-height: 25vh;
   margin: 0.5em;
 }
 .article p {
@@ -26,23 +49,8 @@
 }
 
 h2 {
-  font-size: 1.2em;
+  font-size: 0.9rem;
   margin: 0;
-}
-
-header {
-  display: flex;
-  flex-direction: row;
-  align-items: baseline;
-  justify-content: space-between;
-  padding: 1em;
-}
-header a {
-  font-size: 1.2em;
-  text-decoration: none;
-}
-header h1 {
-  font-size: 1.4em;
 }
 
 main {
@@ -58,11 +66,6 @@ form {
   flex-direction: column;
   align-items: center;
 }
-form form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
 
 .input {
   display: flex;
@@ -74,15 +77,21 @@ form form {
 .input input {
   font-size: 1rem;
   width: 15rem;
-  height: 5vh;
-  border-radius: 0.4em;
+  height: 4vh;
+  border-radius: 0.4rem;
   text-align: center;
 }
 
 input[type=submit] {
-  width: 10em;
+  width: 10rem;
   height: 4vh;
-  border-radius: 0.4em;
+  border-radius: 0.4rem;
+}
+
+textarea {
+  border-radius: 0.6rem;
+  width: 15rem;
+  height: 10vh;
 }
 
 /*
@@ -101,11 +110,6 @@ html, body {
 
 body {
   line-height: 1;
-}
-
-p {
-  max-width: fit-content;
-  max-height: fit-content;
 }
 
 a {

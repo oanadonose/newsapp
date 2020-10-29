@@ -6,7 +6,7 @@ const publicRouter = new Router()
 publicRouter.use(bodyParser({ multipart: true }))
 
 import { Accounts } from '../modules/accounts.js'
-import { News } from '../modules/news.js'
+import News from '../modules/news.js'
 const dbName = 'website.db'
 
 /**
@@ -16,18 +16,15 @@ const dbName = 'website.db'
  * @route {GET} /
  */
 publicRouter.get('/', async ctx => {
-	try {
-		const news = await new News(dbName)
+	const news = await new News(dbName)
+	try {		
 		const newsArticles = await news.all()
-
-		ctx.hbs = {
-			news: newsArticles
-		}
-		
-		await ctx.render('index', ctx.hbs)
-		
+		ctx.hbs = {...ctx.hbs, news: newsArticles}
+		await ctx.render('index', ctx.hbs)	
 	} catch(err) {
 		await ctx.render('error', ctx.hbs)
+	} finally {
+		news.close()
 	}
 })
 
@@ -92,9 +89,12 @@ publicRouter.post('/login', async ctx => {
 	ctx.hbs.body = ctx.request.body
 	try {
 		const body = ctx.request.body
-		await account.login(body.user, body.pass)
+		const id = await account.login(body.user, body.pass)
+		console.log('id', id)
 		ctx.session.authorised = true
-		const referrer = body.referrer || '/secure'
+		ctx.session.user = body.user
+		ctx.session.userid = id
+		const referrer = body.referrer || '/'
 		return ctx.redirect(`${referrer}?msg=you are now logged in...`)
 	} catch(err) {
 		ctx.hbs.msg = err.message
@@ -106,6 +106,9 @@ publicRouter.post('/login', async ctx => {
 
 publicRouter.get('/logout', async ctx => {
 	ctx.session.authorised = null
+	//delete cookies
+	delete ctx.session.user
+	delete ctx.session.userid
 	ctx.redirect('/?msg=you are now logged out')
 })
 
