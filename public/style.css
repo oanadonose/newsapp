@@ -28,7 +28,17 @@ header h1 {
   justify-content: space-around;
 }
 
+@media only screen and (min-width: 1000px) {
+  .article {
+    width: 25%;
+  }
+  .article img {
+    max-width: 341px;
+    max-height: 213px;
+  }
+}
 .article {
+  max-width: 80%;
   margin: 1em;
   padding: 0.8em;
   background-color: rgba(211, 211, 211, 0.4);
@@ -39,11 +49,10 @@ header h1 {
   padding: 1em;
 }
 .article img {
-  max-width: 45vw;
-  max-height: 25vh;
+  width: 100%;
   margin: 0.5em;
 }
-.article p {
+.article .date {
   font-size: 0.8em;
   align-self: flex-end;
 }

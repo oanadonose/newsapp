@@ -36,22 +36,35 @@ header {
   justify-content: space-around;
 }
 
+@media only screen and (min-width: 1000px) {
+	.article {
+		width: 25%;
+
+		img {
+			max-width: 341px;
+			max-height: 213px;
+		}
+	}
+}
 
 .article {
-  margin: 1em;
-  padding: 0.8em;
-  background-color: rgba(211,211,211, 0.4);
-  border-radius: 0.6em;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 1em;
-  img {
-	max-width: 45vw;
-	max-height: 25vh;
-    margin: 0.5em;
-  }
-  p {
+	max-width: 80%;
+	margin: 1em;
+	padding: 0.8em;
+	background-color: rgba(211,211,211, 0.4);
+	border-radius: 0.6em;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 1em;
+
+	img {
+		width: 100%;
+		margin: 0.5em;
+	}
+
+  
+  .date {
     font-size: 0.8em;
     align-self: flex-end;
   }
