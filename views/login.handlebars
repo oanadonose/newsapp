@@ -22,11 +22,11 @@
 		<form action="/login" method="post">
 			<div class="input">
 				<label for="user">Username</label><br />
-				<input type="text" name="user" placeholder="your username" value="{{body.user}}" autofocus>
+				<input required type="text" name="user" placeholder="your username" value="{{body.user}}" autofocus>
 			</div>
 			<div class="input">
 				<label for="pass">Password</label><br />
-				<input type="password" name="pass" placeholder="your password" value="{{body.pass}}">
+				<input required type="password" name="pass" placeholder="your password" value="{{body.pass}}">
 			</div>
 			<input type="hidden" name="referrer" value="{{referrer}}">
 			<p><input type="submit" value="Log in"></p>

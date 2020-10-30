@@ -29,21 +29,19 @@ class News {
 	}
 	
 	async add(data) {
-		const filenamep = 'image_1.jpg'
 		let filename
 		if(data.fileName) {
 			filename = `${Date.now()}.${mime.extension(data.fileType)}`
-			console.log('filename', filename)
 			await fs.copy(data.filePath, `public/images/${filename}`)
 		}
 		else {
+			//placeholder image
 			filename = 'image_2.jpg'
 		}
 		const timestamp = Math.floor(Date.now() / 1000)
 		try {
 			const sql = `INSERT INTO news(userid, title, article, photo, dateAdded)\
 			VALUES(${data.account},'${data.title}','${data.article}','${filename}',${timestamp});`;
-			console.log('sql', sql)
 			await this.db.run(sql)
 			return true
 		} catch(err) {

@@ -2,6 +2,7 @@
 import Router from 'koa-router'
 import News from '../modules/news.js'
 
+
 const secureRouter = new Router({ prefix: '/secure' })
 
 const dbName = 'website.db'
@@ -17,12 +18,8 @@ secureRouter.get('/', async ctx => {
 	}
 })
 
-secureRouter.get('/add', async ctx => {
-	await ctx.render('add', ctx.hbs);
-})
-
 secureRouter.post('/add', async ctx => {
-	const news = await new News(dbName);
+	const news = await new News(dbName)
 	try {
 		ctx.request.body.account = ctx.session.userid
 		if(ctx.request.files.photo.name) {
@@ -30,9 +27,8 @@ secureRouter.post('/add', async ctx => {
 			ctx.request.body.fileName = ctx.request.files.photo.name
 			ctx.request.body.fileType = ctx.request.files.photo.type
 		}
-		console.log('ctx.request.body.article', ctx.request.body.article)
 		await news.add(ctx.request.body)
-		return ctx.redirect('/secure/add?msg=new article added')
+		return ctx.redirect('/?msg=new article added')
 	} catch(err) {
 		console.log('err', err)
 		await ctx.render('error', ctx.hbs);
