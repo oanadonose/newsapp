@@ -26,16 +26,14 @@
  			<p class="msg">{{msg}}</p>
 		{{/if}}
 	<main>
-		<p>This is the home page. Users can see it without logging in.</p>
-		<div class="feed">
-			{{#each news}}
-				<article>
-					<h2><a href="/{{this.user}}/{{this.id}}">{{this.title}}</a></h2>
-					<p class="date">{{this.dateAdded}}</p>
-					<div><img src="images/{{this.photo}}"></img></div>
-					
-				</article>
-			{{/each}}
+		<div class="article">
+			<h1>{{article.title}}</h1>
+			<div class="sub-heading">
+				<h4>by {{article.user}}</h4>
+				<h5>{{article.dateAdded}}</h5>
+			</div>
+			<img src="../images/{{article.photo}}"></img>
+			<div class="article-body">{{article.article}}</div>
 		</div>
 		
 	</main>

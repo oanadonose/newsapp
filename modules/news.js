@@ -12,7 +12,7 @@ class News {
 
 			const sql = 'CREATE TABLE IF NOT EXISTS news\
 			(id INTEGER PRIMARY KEY AUTOINCREMENT, userid INTEGER, title TEXT NOT NULL, \
-					photo TEXT NOT NULL, article TEXT NOT NULL, dateAdded TEXT NOT NULL, \
+					photo TEXT NOT NULL, article LONGTEXT NOT NULL, dateAdded TEXT NOT NULL, \
 					FOREIGN KEY (userid) REFERENCES users(id));'
 			await this.db.run(sql)
 			return this
@@ -44,11 +44,31 @@ class News {
 		try {
 			const sql = `INSERT INTO news(userid, title, article, photo, dateAdded)\
 			VALUES(${data.account},'${data.title}','${data.article}','${filename}',${timestamp});`
+			console.log('sql', sql)
 			await this.db.run(sql)
 			return true
 		} catch(err) {
 			console.log(err, 'err')
 			throw err
+		}
+	}
+
+	async find(userid, newsid) {
+		if(parseInt(newsid) == newsid) {
+			try {
+				const sql = `SELECT * FROM news INNER JOIN users ON users.id=news.userid WHERE news.id=${newsid};`
+				console.log(sql)
+				const article = await this.db.get(sql)
+				const dateTime = new Date(article.dateAdded * MS)
+				const formattedDate = `${dateTime.getDate()}/${dateTime.getMonth()+1}/${dateTime.getFullYear()}`
+				article.dateAdded = formattedDate
+				return article
+			} catch(err) {
+				console.log(err, 'err')
+				throw err
+			}
+		} else {
+			throw new Error('Invalid path to article')
 		}
 	}
 

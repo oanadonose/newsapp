@@ -27,6 +27,29 @@ publicRouter.get('/', async ctx => {
 		news.close()
 	}
 })
+/**
+ * Article details page
+ * 
+ * @name Article Page
+ * @route {GET} /:user/:title
+ */
+publicRouter.get('/:user/:newsid', async ctx => {
+	const news = await new News(dbName)
+	try{
+		//get article info from db
+		const article = await news.find(ctx.params.user, ctx.params.newsid)
+		//add article info to hbs
+		ctx.hbs = { ...ctx.hbs, article}
+		console.log('ctx.hbs', ctx.hbs)
+		await ctx.render('article', ctx.hbs)
+	} catch (err) {
+		console.log('err', err)
+		await ctx.render('error', ctx.hbs)
+	} finally {
+		news.close()
+	}
+})
+
 
 
 /**

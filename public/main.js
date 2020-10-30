@@ -1,3 +1,3 @@
-window.addEventListener('DOMContentLoaded', () => {
-	console.log('DOMContentLoaded')
-})
+//window.addEventListener('DOMContentLoaded', () => {
+//	console.log('DOMContentLoaded')
+//})
