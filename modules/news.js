@@ -2,6 +2,8 @@ import sqlite from 'sqlite-async'
 import mime from 'mime-types'
 import fs from 'fs-extra'
 
+const MS = 1000
+
 class News {
 
 	constructor(dbName = ':memory:') {
@@ -18,35 +20,35 @@ class News {
 	}
 
 	async all() {
-		const sql = 'SELECT users.user, news.* FROM news, users WHERE news.userid = users.id ORDER BY news.dateAdded DESC;'
+		const sql = 'SELECT users.user, news.* FROM news, users\
+		 WHERE news.userid = users.id ORDER BY news.dateAdded DESC;'
 		const news = await this.db.all(sql)
-		for(let index in news) {
-			let dateTime = new Date(news[index].dateAdded * 1000)
-			const formattedDate = `${dateTime.getDate()}/${dateTime.getMonth()+1}/${dateTime.getFullYear()}`;
-			news[index].dateAdded = formattedDate		
+		for(const index in news) {
+			const dateTime = new Date(news[index].dateAdded * MS)
+			const formattedDate = `${dateTime.getDate()}/${dateTime.getMonth()+1}/${dateTime.getFullYear()}`
+			news[index].dateAdded = formattedDate
 		}
 		return news
 	}
-	
+
 	async add(data) {
 		let filename
 		if(data.fileName) {
 			filename = `${Date.now()}.${mime.extension(data.fileType)}`
 			await fs.copy(data.filePath, `public/images/${filename}`)
-		}
-		else {
+		} else {
 			//placeholder image
 			filename = 'image_2.jpg'
 		}
-		const timestamp = Math.floor(Date.now() / 1000)
+		const timestamp = Math.floor(Date.now() / MS)
 		try {
 			const sql = `INSERT INTO news(userid, title, article, photo, dateAdded)\
-			VALUES(${data.account},'${data.title}','${data.article}','${filename}',${timestamp});`;
+			VALUES(${data.account},'${data.title}','${data.article}','${filename}',${timestamp});`
 			await this.db.run(sql)
 			return true
 		} catch(err) {
-			console.log(err, 'err');
-			throw(err)
+			console.log(err, 'err')
+			throw err
 		}
 	}
 

@@ -17,10 +17,10 @@ const dbName = 'website.db'
  */
 publicRouter.get('/', async ctx => {
 	const news = await new News(dbName)
-	try {		
+	try {
 		const newsArticles = await news.all()
 		ctx.hbs = {...ctx.hbs, news: newsArticles}
-		await ctx.render('index', ctx.hbs)	
+		await ctx.render('index', ctx.hbs)
 	} catch(err) {
 		await ctx.render('error', ctx.hbs)
 	} finally {
