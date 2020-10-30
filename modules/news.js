@@ -54,7 +54,7 @@ class News {
 	}
 
 	async find(userid, newsid) {
-		if(parseInt(newsid) == newsid) {
+		if(!Number.isNaN(parseInt(newsid))) {
 			try {
 				const sql = `SELECT * FROM news INNER JOIN users ON users.id=news.userid WHERE news.id=${newsid};`
 				console.log(sql)

@@ -29,7 +29,7 @@ publicRouter.get('/', async ctx => {
 })
 /**
  * Article details page
- * 
+ *
  * @name Article Page
  * @route {GET} /:user/:title
  */
@@ -49,8 +49,6 @@ publicRouter.get('/:user/:newsid', async ctx => {
 		news.close()
 	}
 })
-
-
 
 /**
  * The user registration page.
