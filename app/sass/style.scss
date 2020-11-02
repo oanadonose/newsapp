@@ -72,7 +72,19 @@ h2 {
 }
 
 //end homepage
-
+.admin {
+	padding: 0.7em;
+	width: 10em;
+	border-radius: 0.5em;
+}
+.release {
+	background-color: lightgreen;
+	border-color: lightgreen;
+}
+.revision {
+	background-color: lightcoral;
+	border-color: lightcoral;
+}
 //login/register
 main {
 	@include center-vertical;
