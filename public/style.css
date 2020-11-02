@@ -58,6 +58,22 @@ h2 {
   margin: 0;
 }
 
+.admin {
+  padding: 0.7em;
+  width: 10em;
+  border-radius: 0.5em;
+}
+
+.release {
+  background-color: lightgreen;
+  border-color: lightgreen;
+}
+
+.revision {
+  background-color: lightcoral;
+  border-color: lightcoral;
+}
+
 main {
   display: flex;
   flex-direction: column;

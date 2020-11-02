@@ -11,7 +11,8 @@ class Accounts {
 			this.db = await sqlite.open(dbName)
 			// we need this table to store the user accounts
 			const sql = 'CREATE TABLE IF NOT EXISTS users\
-				(id INTEGER PRIMARY KEY AUTOINCREMENT, user TEXT, pass TEXT, email TEXT);'
+				(id INTEGER PRIMARY KEY AUTOINCREMENT, user TEXT, pass TEXT, email TEXT,\
+					admin INTEGER DEFAULT 0);'
 			await this.db.run(sql)
 			return this
 		})()
@@ -49,11 +50,20 @@ class Accounts {
 		let sql = `SELECT count(id) AS count FROM users WHERE user="${username}";`
 		const records = await this.db.get(sql)
 		if(!records.count) throw new Error(`username "${username}" not found`)
-		sql = `SELECT id, pass FROM users WHERE user = "${username}";`
+		sql = `SELECT * FROM users WHERE user = "${username}";`
 		const record = await this.db.get(sql)
 		const valid = await bcrypt.compare(password, record.pass)
 		if(valid === false) throw new Error(`invalid password for account "${username}"`)
-		return record.id
+		console.log('record', record)
+		return record
+	}
+
+	async getUserDetails(id) {
+		const sql = `SELECT * FROM users where id=${id};`
+		const userDetails = await this.db.get(sql)
+		if(!userDetails) throw new Error(`no user found for id ${id}`)
+		console.log('userDetails', userDetails)
+		return userDetails
 	}
 
 	async close() {
