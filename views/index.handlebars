@@ -9,15 +9,19 @@
 		<meta name="author" content="Mark Tyers">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<link href="{{host}}/style.css" type="text/css" rel="stylesheet" />
+		<script type="module" src="main.js"></script>
 	</head>
 	<body>
 		<header>
 			<h1><a href="/">Local News</a></h1>
-			{{#if authorised}}
-				<a href="/logout">Log out</a>
-			{{else}}
-				<a href="/login">Log in</a>
-			{{/if}}
+			<div class="header-buttons">
+				{{#if authorised}}
+					<a href="/secure">Add news</a>
+					<a href="/logout">Log out</a>
+				{{else}}
+					<a href="/login">Log in</a>
+				{{/if}}
+			</div>
 		</header>
 		{{#if msg}}
  			<p class="msg">{{msg}}</p>
@@ -28,14 +32,13 @@
 			{{#each news}}
 				<div class="article">
 					<h2>{{this.title}}</h2>
-					<p>{{this.dateAdded}}</p>
-					<img src="images/{{this.photo}}"></img>
+					<p class="date">{{this.dateAdded}}</p>
+					<div><img src="images/{{this.photo}}"></img></div>
+					
 				</div>
 			{{/each}}
 		</div>
-		{{#if authorised}}
-			<p><a href="/secure">secure page</a></p>
-		{{/if}}
+		
 	</main>
 	</body>
 </html>
