@@ -22,6 +22,7 @@ app.use( async(ctx, next) => {
 		authorised: ctx.session.authorised,
 		user: ctx.session.user,
 		userid: ctx.session.userid,
+		admin: ctx.session.admin,
 		host: `https://${ctx.host}`
 	}
 	for(const key in ctx.query) ctx.hbs[key] = ctx.query[key]

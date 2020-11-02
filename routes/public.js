@@ -27,28 +27,7 @@ publicRouter.get('/', async ctx => {
 		news.close()
 	}
 })
-/**
- * Article details page
- *
- * @name Article Page
- * @route {GET} /:user/:title
- */
-publicRouter.get('/:user/:newsid', async ctx => {
-	const news = await new News(dbName)
-	try{
-		//get article info from db
-		const article = await news.find(ctx.params.user, ctx.params.newsid)
-		//add article info to hbs
-		ctx.hbs = { ...ctx.hbs, article}
-		console.log('ctx.hbs', ctx.hbs)
-		await ctx.render('article', ctx.hbs)
-	} catch (err) {
-		console.log('err', err)
-		await ctx.render('error', ctx.hbs)
-	} finally {
-		news.close()
-	}
-})
+
 
 /**
  * The user registration page.
@@ -110,11 +89,12 @@ publicRouter.post('/login', async ctx => {
 	ctx.hbs.body = ctx.request.body
 	try {
 		const body = ctx.request.body
-		const id = await account.login(body.user, body.pass)
-		console.log('id', id)
+		const user = await account.login(body.user, body.pass)
+		const id = user.id
 		ctx.session.authorised = true
 		ctx.session.user = body.user
 		ctx.session.userid = id
+		ctx.session.admin = user.admin
 		const referrer = body.referrer || '/'
 		return ctx.redirect(`${referrer}?msg=you are now logged in...`)
 	} catch(err) {
@@ -130,6 +110,7 @@ publicRouter.get('/logout', async ctx => {
 	//delete cookies
 	delete ctx.session.user
 	delete ctx.session.userid
+	delete ctx.session.admin
 	ctx.redirect('/?msg=you are now logged out')
 })
 

@@ -50,11 +50,20 @@ class Accounts {
 		let sql = `SELECT count(id) AS count FROM users WHERE user="${username}";`
 		const records = await this.db.get(sql)
 		if(!records.count) throw new Error(`username "${username}" not found`)
-		sql = `SELECT id, pass FROM users WHERE user = "${username}";`
+		sql = `SELECT * FROM users WHERE user = "${username}";`
 		const record = await this.db.get(sql)
 		const valid = await bcrypt.compare(password, record.pass)
 		if(valid === false) throw new Error(`invalid password for account "${username}"`)
-		return record.id
+		console.log('record', record)
+		return record
+	}
+
+	async getUserDetails(id) {
+		let sql = `SELECT * FROM users where id=${id};`
+		const userDetails = await this.db.get(sql)
+		if(!userDetails) throw new Error(`no user found for id ${id}`)
+		console.log('userDetails', userDetails)
+		return userDetails
 	}
 
 	async close() {

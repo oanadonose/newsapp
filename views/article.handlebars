@@ -14,8 +14,9 @@
 		<header>
 			<h1><a href="/">Local News</a></h1>
 			<div class="header-buttons">
+				
 				{{#if authorised}}
-					<a href="/secure">Add news</a>
+					<a href="/news/add">Add news</a>
 					<a href="/logout">Log out</a>
 				{{else}}
 					<a href="/login">Log in</a>
@@ -25,7 +26,20 @@
 		{{#if msg}}
  			<p class="msg">{{msg}}</p>
 		{{/if}}
-	<main>
+	<main class="article-page">
+		{{#if admin}}
+			<aside>
+				<div>	
+					{{#if (eq article.status "pending")}}
+					<form action="/news/{{article.id}}" method="POST">
+						<button type="submit" class="admin release">Mark as released</button>
+					</form>
+					<button class="admin revision">Mark for revision</button>
+						
+					{{/if}}
+				</div>
+			</aside>
+		{{/if}}
 		<div class="article">
 			<h1>{{article.title}}</h1>
 			<div class="sub-heading">
