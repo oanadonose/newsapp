@@ -31,7 +31,9 @@ secureRouter.post('/add', async ctx => {
 		return ctx.redirect('/?msg=new article added')
 	} catch(err) {
 		console.log('err', err)
-		await ctx.render('error', ctx.hbs)
+		ctx.hbs.msg = err.message
+		ctx.hbs.body = ctx.request.body
+		await ctx.render('secure', ctx.hbs)
 	} finally {
 		news.close()
 	}
