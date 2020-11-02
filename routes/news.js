@@ -34,7 +34,7 @@ newsRouter.get('/:newsid(\\d+)', async ctx => {
 	}
 })
 
-newsRouter.post('/:newsid(\\d+)', async (ctx,next) => {
+newsRouter.post('/release/:newsid(\\d+)', async (ctx,next) => {
 	const news = await new News(dbName)
 	console.log('in released route')
 	try {
@@ -42,6 +42,22 @@ newsRouter.post('/:newsid(\\d+)', async (ctx,next) => {
 		console.log('ctx.hbs', ctx.hbs)
 		next()
 		return ctx.redirect(`/news/${ctx.params.newsid}?msg=article released`)
+	} catch(err) {
+		console.log('err', err)
+		await ctx.render('error', ctx.hbs)
+	} finally {
+		news.close()
+	}
+})
+
+newsRouter.post('/revise/:newsid(\\d+)', async (ctx,next) => {
+	const news = await new News(dbName)
+	console.log('in revised route')
+	try {
+		await news.updateStatus(ctx.params.newsid, "pending")
+		console.log('ctx.hbs', ctx.hbs)
+		next()
+		return ctx.redirect(`/news/${ctx.params.newsid}?msg=article marked for revision`)
 	} catch(err) {
 		console.log('err', err)
 		await ctx.render('error', ctx.hbs)

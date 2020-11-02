@@ -31,12 +31,13 @@
 			<aside>
 				<div>	
 					{{#if (eq article.status "pending")}}
-					<form action="/news/{{article.id}}" method="POST">
+					<form action="/news/release/{{article.id}}" method="POST">
 						<button type="submit" class="admin release">Mark as released</button>
 					</form>
-					<button class="admin revision">Mark for revision</button>
-						
-					{{/if}}
+          {{/if}}
+          <form action="/news/revise/{{article.id}}" method="POST">
+            <button class="admin revision">Mark for revision</button>
+          </form>
 				</div>
 			</aside>
 		{{/if}}
