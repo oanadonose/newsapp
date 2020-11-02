@@ -13,7 +13,7 @@ class News {
 			const sql = 'CREATE TABLE IF NOT EXISTS news\
 			(id INTEGER PRIMARY KEY AUTOINCREMENT, userid INTEGER, title TEXT NOT NULL, \
 					photo TEXT NOT NULL, article LONGTEXT NOT NULL, dateAdded TEXT NOT NULL, \
-					FOREIGN KEY (userid) REFERENCES users(id));'
+					released INTEGER DEFAULT 0, FOREIGN KEY (userid) REFERENCES users(id));'
 			await this.db.run(sql)
 			return this
 		})()
@@ -21,7 +21,7 @@ class News {
 
 	async all() {
 		const sql = 'SELECT users.user, news.* FROM news, users\
-		 WHERE news.userid = users.id ORDER BY news.dateAdded DESC;'
+		 WHERE news.userid = users.id AND released=1 ORDER BY news.dateAdded DESC;'
 		const news = await this.db.all(sql)
 		for(const index in news) {
 			const dateTime = new Date(news[index].dateAdded * MS)
