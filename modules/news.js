@@ -32,6 +32,8 @@ class News {
 	}
 
 	async add(data) {
+		if(!data.title) throw new Error('missing title')
+		if(!data.article) throw new Error('missing article body')
 		let filename
 		if(data.fileName) {
 			filename = `${Date.now()}.${mime.extension(data.fileType)}`
@@ -46,11 +48,11 @@ class News {
 			VALUES(${data.account},'${data.title}','${data.article}','${filename}',${timestamp});`
 			console.log('sql', sql)
 			await this.db.run(sql)
-			return true
 		} catch(err) {
 			console.log(err, 'err')
 			throw err
 		}
+		return true
 	}
 
 	async find(userid, newsid) {
