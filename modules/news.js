@@ -46,10 +46,8 @@ class News {
 		try {
 			const sql = `INSERT INTO news(userid, title, article, photo, dateAdded)\
 			VALUES(${data.account},'${data.title}','${data.article}','${filename}',${timestamp});`
-			console.log('sql', sql)
 			await this.db.run(sql)
 		} catch(err) {
-			console.log(err, 'err')
 			throw err
 		}
 		return true
@@ -58,7 +56,8 @@ class News {
 	async find(newsid) {
 		if(!Number.isNaN(parseInt(newsid))) {
 			try {
-				const sql = `SELECT news.*, users.user FROM news INNER JOIN users ON news.userid=users.id WHERE news.id=${newsid};`
+				const sql = `SELECT news.*, users.user FROM news \
+        INNER JOIN users ON news.userid=users.id WHERE news.id=${newsid};`
 				const article = await this.db.get(sql)
 				const dateTime = new Date(article.dateAdded * MS)
 				const formattedDate = `${dateTime.getDate()}/${dateTime.getMonth()+1}/${dateTime.getFullYear()}`

@@ -1,8 +1,6 @@
 import test from 'ava'
 import News from '../modules/news.js'
 
-const dbName = 'website.db'
-
 test('ADD NEW ARTICLE: successfully create a new article', async test => {
 	test.plan(1)
 	const news = await new News()
@@ -21,7 +19,7 @@ test('ADD NEW ARTICLE: missing title field', async test => {
 	test.plan(1)
 	const news = await new News()
 	try {
-		await news.add({title:'', article:'test body'})
+		await news.add({title: '', article: 'test body'})
 		test.fail('error not thrown')
 	} catch(err) {
 		test.is(err.message, 'missing title', 'incorrect error message')
@@ -34,7 +32,7 @@ test('ADD NEW ARTICLE: missing article body', async test => {
 	test.plan(1)
 	const news = await new News()
 	try {
-		await news.add({title:'test title',article:''})
+		await news.add({title: 'test title',article: ''})
 		test.fail('error not thrown')
 	} catch(err) {
 		test.is(err.message, 'missing article body', 'incorrect error message')

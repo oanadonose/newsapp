@@ -59,7 +59,7 @@ class Accounts {
 	}
 
 	async getUserDetails(id) {
-		let sql = `SELECT * FROM users where id=${id};`
+		const sql = `SELECT * FROM users where id=${id};`
 		const userDetails = await this.db.get(sql)
 		if(!userDetails) throw new Error(`no user found for id ${id}`)
 		console.log('userDetails', userDetails)

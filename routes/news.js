@@ -8,7 +8,7 @@ const newsRouter = new Router({ prefix: '/news' })
 
 const dbName = 'website.db'
 
-let comp = helpers.comparison()
+helpers.comparison()
 
 /**
  * Article details page
@@ -24,7 +24,7 @@ newsRouter.get('/:newsid(\\d+)', async ctx => {
 		const article = await news.find(ctx.params.newsid)
 		//add article info to hbs
 		ctx.hbs = { ...ctx.hbs, article}
-		console.log(ctx.hbs,'ctx.hbs');
+		console.log(ctx.hbs,'ctx.hbs')
 		await ctx.render('article', ctx.hbs)
 	} catch (err) {
 		console.log('err', err)
@@ -34,11 +34,11 @@ newsRouter.get('/:newsid(\\d+)', async ctx => {
 	}
 })
 
-newsRouter.post('/release/:newsid(\\d+)', async (ctx,next) => {
+newsRouter.post('/release/:newsid(\\d+)', async(ctx,next) => {
 	const news = await new News(dbName)
 	console.log('in released route')
 	try {
-		await news.updateStatus(ctx.params.newsid, "released")
+		await news.updateStatus(ctx.params.newsid, 'released')
 		console.log('ctx.hbs', ctx.hbs)
 		next()
 		return ctx.redirect(`/news/${ctx.params.newsid}?msg=article released`)
@@ -50,11 +50,11 @@ newsRouter.post('/release/:newsid(\\d+)', async (ctx,next) => {
 	}
 })
 
-newsRouter.post('/revise/:newsid(\\d+)', async (ctx,next) => {
+newsRouter.post('/revise/:newsid(\\d+)', async(ctx,next) => {
 	const news = await new News(dbName)
 	console.log('in revised route')
 	try {
-		await news.updateStatus(ctx.params.newsid, "pending")
+		await news.updateStatus(ctx.params.newsid, 'pending')
 		console.log('ctx.hbs', ctx.hbs)
 		next()
 		return ctx.redirect(`/news/${ctx.params.newsid}?msg=article marked for revision`)
@@ -101,7 +101,7 @@ newsRouter.post('/add', async ctx => {
 newsRouter.get('/pending', async ctx => {
 	const news = await new News(dbName)
 	try {
-		const pendingArticles = await news.all("pending")
+		const pendingArticles = await news.all('pending')
 		console.log('ctx.hbs1', ctx.hbs)
 		ctx.hbs = {...ctx.hbs, news: pendingArticles}
 		console.log('ctx.hbs2', ctx.hbs)
