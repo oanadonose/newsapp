@@ -58,6 +58,12 @@ h2 {
   margin: 0;
 }
 
+.edit {
+  padding: 0.7em;
+  width: 10em;
+  border-radius: 0.5em;
+}
+
 .admin {
   padding: 0.7em;
   width: 10em;
@@ -65,13 +71,17 @@ h2 {
 }
 
 .release {
-  background-color: lightgreen;
   border-color: lightgreen;
+}
+.release:hover {
+  background-color: lightgreen;
 }
 
 .revision {
-  background-color: lightcoral;
   border-color: lightcoral;
+}
+.revision:hover {
+  background-color: lightcoral;
 }
 
 main {

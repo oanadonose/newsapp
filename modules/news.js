@@ -82,6 +82,18 @@ class News {
 			throw err
 		}
 	}
+  
+  async edit(article) {
+    try {
+      const sql = `UPDATE news SET title="${article.title}", article="${article.article}", photo="${article.photo}", status="pending" WHERE id=${article.id};`
+      console.log(sql)
+      //await this.db.run(sql)
+      return true
+    } catch(err) {
+      console.log('err',err)
+      throw err
+    }
+  }
 
 	async close() {
 		await this.db.close()

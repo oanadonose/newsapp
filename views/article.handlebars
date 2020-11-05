@@ -41,6 +41,9 @@
 				</div>
 			</aside>
 		{{/if}}
+    {{#if owner}}
+      <button class="edit"><a href="/news/add/3">EDIT</a></button>  
+    {{/if}}
 		<div class="article">
 			<h1>{{article.title}}</h1>
 			<div class="sub-heading">

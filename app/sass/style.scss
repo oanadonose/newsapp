@@ -5,7 +5,11 @@
 	flex-direction: column;
 	align-items: center;
 }
-
+@mixin button-basic {
+  padding: 0.7em;
+	width: 10em;
+	border-radius: 0.5em;
+}
 //homepage
 header {
 	display: flex;
@@ -70,19 +74,23 @@ h2 {
   font-size: 0.9rem;
   margin: 0;
 }
-
+.edit {
+  @include button-basic;
+}
 //end homepage
 .admin {
-	padding: 0.7em;
-	width: 10em;
-	border-radius: 0.5em;
+	@include button-basic;
 }
 .release {
-	background-color: lightgreen;
+  &:hover{
+    background-color: lightgreen;
+  }
 	border-color: lightgreen;
 }
 .revision {
-	background-color: lightcoral;
+  &:hover{
+    background-color: lightcoral;
+  }
 	border-color: lightcoral;
 }
 //login/register
