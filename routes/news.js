@@ -2,12 +2,21 @@
 import Router from 'koa-router'
 import News from '../modules/news.js'
 import helpers from 'handlebars-helpers'
+import nodemailer from 'nodemailer'
 
+const transporter = nodemailer.createTransport({
+	service: 'gmail',
+	auth: {
+		user: process.env.user,
+		pass: process.env.password
+	}
+})
 
 const newsRouter = new Router({ prefix: '/news' })
 
 const dbName = 'website.db'
 
+//helpers for hbs
 helpers.comparison()
 
 /**
@@ -26,9 +35,6 @@ newsRouter.get('/:newsid(\\d+)', async ctx => {
 
 		//create owner variable to check in hbs
 		const owner = article.userid===ctx.session.userid
-		console.log(article.userid,'article.userid')
-		console.log(ctx.session.userid, 'ctx.session.userid')
-		console.log(owner,'owner')
 
 		//add article info to hbs
 		//add owner property in order to display edit button
@@ -45,10 +51,31 @@ newsRouter.get('/:newsid(\\d+)', async ctx => {
 
 newsRouter.post('/release/:newsid(\\d+)', async(ctx,next) => {
 	const news = await new News(dbName)
-	console.log('in released route')
 	try {
+		const article = await news.find(ctx.params.newsid)
 		await news.updateStatus(ctx.params.newsid, 'released')
-		console.log('ctx.hbs', ctx.hbs)
+		console.log('article', article)
+		const mailOpts = {
+			from: `natyorbisnes@gmail.com`,
+			to: `${article.email}`,
+			subject: `${ctx.params.newsid} - "${article.title}" has been released`,
+			replyTo: `${article.email}`,
+			html: `
+				<h1>Hello</h1>
+				<p>Your article has been released. (id: ${ctx.params.newsid})</p>
+				<h2>${article.title}</h2>
+				<p>${article.article}</p>
+				<a href="${process.env.host}/news/${ctx.params.newsid}">Linky</a>
+				`
+		}
+		console.log('mailOpts', mailOpts)
+		transporter.sendMail(mailOpts, (err, res) => {
+			if(err) {
+				console.log('err', err);
+			} else {
+				console.log('res', res)
+			}
+		})
 		next()
 		return ctx.redirect(`/news/${ctx.params.newsid}?msg=article released`)
 	} catch(err) {

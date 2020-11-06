@@ -56,7 +56,7 @@ class News {
 	async find(newsid) {
 		if(!Number.isNaN(parseInt(newsid))) {
 			try {
-				const sql = `SELECT news.*, users.user FROM news \
+				const sql = `SELECT news.*, users.user, users.email FROM news \
         INNER JOIN users ON news.userid=users.id WHERE news.id=${newsid};`
 				const article = await this.db.get(sql)
 				const dateTime = new Date(article.dateAdded * MS)

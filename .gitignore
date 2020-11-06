@@ -34,3 +34,4 @@ config.json
 
 templates.md
 public/images/
+nodemon.json
