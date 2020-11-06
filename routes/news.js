@@ -3,6 +3,7 @@ import Router from 'koa-router'
 import News from '../modules/news.js'
 import helpers from 'handlebars-helpers'
 import nodemailer from 'nodemailer'
+import {generateMailOpts} from '../helpers/mail.js'
 
 const transporter = nodemailer.createTransport({
 	service: 'gmail',
@@ -54,32 +55,14 @@ newsRouter.post('/release/:newsid(\\d+)', async(ctx,next) => {
 	try {
 		const article = await news.find(ctx.params.newsid)
 		await news.updateStatus(ctx.params.newsid, 'released')
-		console.log('article', article)
-		const mailOpts = {
-			from: `natyorbisnes@gmail.com`,
-			to: `${article.email}`,
-			subject: `${ctx.params.newsid} - "${article.title}" has been released`,
-			replyTo: `${article.email}`,
-			html: `
-				<h1>Hello</h1>
-				<p>Your article has been released. (id: ${ctx.params.newsid})</p>
-				<h2>${article.title}</h2>
-				<p>${article.article}</p>
-				<a href="${process.env.host}/news/${ctx.params.newsid}">Linky</a>
-				`
-		}
-		console.log('mailOpts', mailOpts)
+		const mailOpts = generateMailOpts(article, ctx.params.newsid)
 		transporter.sendMail(mailOpts, (err, res) => {
-			if(err) {
-				console.log('err', err);
-			} else {
-				console.log('res', res)
-			}
+			if(err) console.log('err', err)
+			else console.log('res', res)
 		})
 		next()
 		return ctx.redirect(`/news/${ctx.params.newsid}?msg=article released`)
 	} catch(err) {
-		console.log('err', err)
 		await ctx.render('error', ctx.hbs)
 	} finally {
 		news.close()
