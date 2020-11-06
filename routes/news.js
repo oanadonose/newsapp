@@ -90,6 +90,7 @@ newsRouter.post('/add', async ctx => {
 	const news = await new News(dbName)
 	try {
 		ctx.request.body.account = ctx.session.userid
+		console.log(ctx.request, 'ctx.request');
 		if(ctx.request.files.photo.name) {
 			ctx.request.body.filePath = ctx.request.files.photo.path
 			ctx.request.body.fileName = ctx.request.files.photo.name
@@ -101,7 +102,7 @@ newsRouter.post('/add', async ctx => {
 		console.log('err', err)
 		ctx.hbs.msg = err.message
 		ctx.hbs.body = ctx.request.body
-		await ctx.render('news', ctx.hbs)
+		await ctx.render('index', ctx.hbs)
 	} finally {
 		news.close()
 	}
@@ -119,17 +120,24 @@ newsRouter.get('/add/:newsid(\\d+)', async ctx => {
   }
 })
 
-newsRouter.put('/add/:newsid(\\d+)', async ctx => {
+newsRouter.post('/add/:newsid(\\d+)', async ctx => {
   const news = await new News(dbName)
-  try {
-    console.log(ctx.hbs.article, 'ctx.hbs.article')
-    //await news.edit(ctx.hbs.article)
+  try {	
+	if(ctx.request.files.photo.name) {
+		ctx.request.body.filePath = ctx.request.files.photo.path
+		ctx.request.body.fileName = ctx.request.files.photo.name
+		ctx.request.body.fileType = ctx.request.files.photo.type
+	}
+	ctx.request.body.newsid = ctx.params.newsid
+	console.log(ctx.request.body, 'ctx.request.body')
+    await news.edit(ctx.request.body)
     return ctx.redirect('/?msg=article edited successfully')
   } catch(err) {
-    console.log('err', err)
+    	console.log('err', err)
 		ctx.hbs.msg = err.message
 		ctx.hbs.body = ctx.request.body
-		await ctx.render('news', ctx.hbs)
+		console.log('ctx.hbs', ctx.hbs);
+		await ctx.render('error', ctx.hbs)
 	} finally {
 		news.close()
   }
