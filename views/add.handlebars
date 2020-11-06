@@ -20,21 +20,27 @@
 		{{/if}}
 		<main>
 		<p>This is a secure page. Users need to have a valid account and be logged in to see it.</p>
-		<form id="addnews" name="addnews" action="/news/add" enctype="multipart/form-data" method="post">
+		{{!--<form id="addnews" name="addnews" action="/news/add" enctype="multipart/form-data" method="post">--}}
+		<form id="addnews" name="addnews" enctype="multipart/form-data" method="post">
 			<div class="input">
 				<label for="title">Title</label><br />
-				<input required type="text" name="title" placeholder="Article title">
+				<input required type="text" name="title" placeholder="Article title" value="{{article.title}}">
 			</div>
 			<div class="input">
 				<label for="article">article</label><br />
-				<textarea required form="addnews" name="article" placeholder="An article body of at least 300 characters..." ></textarea>
+				<textarea required form="addnews" name="article">{{article.article}}</textarea>
 			</div>
 			<div class="input">
-				<label for="photo">Photo</label><br />
+				<label for="photo">Photo</label><br/>
 				<input type="file" name="photo" accept="image/*">
 			</div>
-			<p><input type="submit" value="Create"></p>
+      {{#if article}}
+        <p><input type="submit" value="Edit" formaction="/news/add/{{article.id}}"></p>
+      {{else}}
+        <p><input type="submit" value="Create" formaction="/news/add/"></p>
+      {{/if}}
 		</form>
+		
 		<p><a href="/">Home page</a></p>
 		</main>
 	</body>

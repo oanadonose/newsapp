@@ -83,6 +83,28 @@ class News {
 		}
 	}
 
+	async edit(article) {
+		if(!article.title) throw new Error('missing title')
+		if(!article.article) throw new Error('missing article body')
+		let filename
+		if(article.fileName) {
+			filename = `${Date.now()}.${mime.extension(article.fileType)}`
+			await fs.copy(article.filePath, `public/images/${filename}`)
+		} else {
+		//placeholder image
+			filename = 'image_2.jpg'
+		}
+		const timestamp = Math.floor(Date.now() / MS)
+		try {
+			const sql = `UPDATE news SET title="${article.title}", article="${article.article}",\ 
+      photo="${filename}", dateAdded="${timestamp}", status="pending" WHERE id=${article.newsid};`
+			await this.db.run(sql)
+			return true
+		} catch(err) {
+			throw err
+		}
+	}
+
 	async close() {
 		await this.db.close()
 	}
