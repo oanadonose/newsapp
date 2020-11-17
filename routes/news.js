@@ -2,12 +2,22 @@
 import Router from 'koa-router'
 import News from '../modules/news.js'
 import helpers from 'handlebars-helpers'
+import nodemailer from 'nodemailer'
+import {generateMailOpts} from '../helpers/mail.js'
 
+const transporter = nodemailer.createTransport({
+	service: 'gmail',
+	auth: {
+		user: process.env.user,
+		pass: process.env.password
+	}
+})
 
 const newsRouter = new Router({ prefix: '/news' })
 
 const dbName = 'website.db'
 
+//helpers for hbs
 helpers.comparison()
 
 /**
@@ -26,9 +36,6 @@ newsRouter.get('/:newsid(\\d+)', async ctx => {
 
 		//create owner variable to check in hbs
 		const owner = article.userid===ctx.session.userid
-		console.log(article.userid,'article.userid')
-		console.log(ctx.session.userid, 'ctx.session.userid')
-		console.log(owner,'owner')
 
 		//add article info to hbs
 		//add owner property in order to display edit button
@@ -45,14 +52,17 @@ newsRouter.get('/:newsid(\\d+)', async ctx => {
 
 newsRouter.post('/release/:newsid(\\d+)', async(ctx,next) => {
 	const news = await new News(dbName)
-	console.log('in released route')
 	try {
+		const article = await news.find(ctx.params.newsid)
 		await news.updateStatus(ctx.params.newsid, 'released')
-		console.log('ctx.hbs', ctx.hbs)
+		const mailOpts = generateMailOpts(article, ctx.params.newsid)
+		transporter.sendMail(mailOpts, (err, res) => {
+			if(err) console.log('err', err)
+			else console.log('res', res)
+		})
 		next()
 		return ctx.redirect(`/news/${ctx.params.newsid}?msg=article released`)
 	} catch(err) {
-		console.log('err', err)
 		await ctx.render('error', ctx.hbs)
 	} finally {
 		news.close()
@@ -122,6 +132,7 @@ newsRouter.post('/add/:newsid(\\d+)', async ctx => {
 	const news = await new News(dbName)
 	try {
 		if(ctx.request.files.photo.name) {
+      console.log(ctx.request.files.photo.name,'ctx.req.files.pohoto.name')
 			ctx.request.body.filePath = ctx.request.files.photo.path
 			ctx.request.body.fileName = ctx.request.files.photo.name
 			ctx.request.body.fileType = ctx.request.files.photo.type

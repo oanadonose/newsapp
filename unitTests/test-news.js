@@ -10,16 +10,16 @@ test('ADD NEW ARTICLE: successfully create a new article', async test => {
 		article: 'This is a fake article.',
 		dateAdded: Math.floor(Date.now() / 1000)
 	}
-  try {
-  const add = await news.add(fakeNews)
-  test.is(add, true, 'unable to add news')
-  } catch(err) {
-		test.is(err.message, '' , 'incorrect error message');
+	try {
+		const add = await news.add(fakeNews)
+		test.is(add, true, 'unable to add news')
+	} catch(err) {
+		test.is(err.message, '' , 'incorrect error message')
 	} finally {
 		news.close()
 	}
-	
-	
+
+
 })
 
 test('ADD NEW ARTICLE: missing title field', async test => {
@@ -49,58 +49,58 @@ test('ADD NEW ARTICLE: missing article body', async test => {
 })
 
 test('EDIT ARTICLE: succesfully edit article', async test => {
-  test.plan(1)
-  const news = await new News()
-  const updated = {
-    title: "update test",
-    article: "update test",
-    photo: "update.jpeg",
-    newsid: "1"
-  }
-  try {
-    const edit = await news.edit(updated)
-    test.is(edit, true, 'unable to add news')
-  } catch(err) {
-    test.is(err.message, 'test', 'inocrrect error message')
-  } finally {
-    news.close()
-  }
+	test.plan(1)
+	const news = await new News()
+	const updated = {
+		title: 'update test',
+		article: 'update test',
+		photo: 'update.jpeg',
+		newsid: '1'
+	}
+	try {
+		const edit = await news.edit(updated)
+		test.is(edit, true, 'unable to add news')
+	} catch(err) {
+		test.is(err.message, 'test', 'inocrrect error message')
+	} finally {
+		news.close()
+	}
 })
 
 test('EDIT ARTICLE: missing article title', async test => {
-  test.plan(1)
-  const news = await new News()
-  const updated = {
-    title: "",
-    article: "update test",
-    photo: "update.jpeg",
-    newsid: "1"
-  }
-  try {
-    const edit = await news.edit(updated)
-    test.fail('error not thrown')
-  } catch(err) {
-    test.is(err.message, 'missing title', 'inocrrect error message')
-  } finally {
-    news.close()
-  }
+	test.plan(1)
+	const news = await new News()
+	const updated = {
+		title: '',
+		article: 'update test',
+		photo: 'update.jpeg',
+		newsid: '1'
+	}
+	try {
+		await news.edit(updated)
+		test.fail('error not thrown')
+	} catch(err) {
+		test.is(err.message, 'missing title', 'inocrrect error message')
+	} finally {
+		news.close()
+	}
 })
 
 test('EDIT ARTICLE: missing article body', async test => {
-  test.plan(1)
-  const news = await new News()
-  const updated = {
-    title: "Test",
-    article: "",
-    photo: "update.jpeg",
-    newsid: "1"
-  }
-  try {
-    const edit = await news.edit(updated)
-    test.fail('error not thrown')
-  } catch(err) {
-    test.is(err.message, 'missing article body', 'inocrrect error message')
-  } finally {
-    news.close()
-  }
+	test.plan(1)
+	const news = await new News()
+	const updated = {
+		title: 'Test',
+		article: '',
+		photo: 'update.jpeg',
+		newsid: '1'
+	}
+	try {
+		await news.edit(updated)
+		test.fail('error not thrown')
+	} catch(err) {
+		test.is(err.message, 'missing article body', 'inocrrect error message')
+	} finally {
+		news.close()
+	}
 })
