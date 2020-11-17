@@ -40,6 +40,12 @@ class Accounts {
 		return true
 	}
 
+	async getUserLeaderboards() {
+		let sql = `SELECT * FROM users ORDER BY points DESC LIMIT 10;`
+		const data = await this.db.all(sql)
+		return data
+	}
+
 	/**
 	 * checks to see if a set of login credentials are valid
 	 * @param {String} username the username to check

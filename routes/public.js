@@ -17,9 +17,13 @@ const dbName = 'website.db'
  */
 publicRouter.get('/', async ctx => {
 	const news = await new News(dbName)
+	const accounts = await new Accounts(dbName)
 	try {
 		const newsArticles = await news.all()
-		ctx.hbs = { ...ctx.hbs, news: newsArticles }
+		console.log('before leaders')
+		const leaders = await accounts.getUserLeaderboards()
+		console.log(leaders, 'leaders')
+		ctx.hbs = { ...ctx.hbs, news: newsArticles, leaders }
 		await ctx.render('index', ctx.hbs)
 	} catch (err) {
 		await ctx.render('error', ctx.hbs)

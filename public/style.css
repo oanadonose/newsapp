@@ -84,10 +84,39 @@ h2 {
   background-color: lightcoral;
 }
 
+@media screen and (min-width: 1000px) {
+  .home-body {
+    display: flex;
+    flex-direction: row;
+  }
+}
+
+aside {
+  margin: 2em;
+}
+@media screen and (min-width: 1000px) {
+  aside {
+    width: 15%;
+  }
+}
+aside .leaderboards .leader-row, aside .leaderboards .header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 0.5em;
+  border-bottom: 1px solid rgba(211, 211, 211, 0.4);
+  border-left: 1px solid rgba(211, 211, 211, 0.4);
+}
+aside .leaderboards .header {
+  border-radius: 1em 1em 0 0;
+  background-color: rgba(211, 211, 211, 0.4);
+}
+
 main {
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin: 2em;
 }
 
 form {
