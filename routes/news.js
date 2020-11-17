@@ -1,6 +1,7 @@
 
 import Router from 'koa-router'
 import News from '../modules/news.js'
+import Accounts from '../modules/accounts.js'
 import Feedback from '../modules/feedback.js'
 import helpers from 'handlebars-helpers'
 import nodemailer from 'nodemailer'
@@ -57,9 +58,11 @@ newsRouter.get('/:newsid(\\d+)', async ctx => {
 
 newsRouter.post('/release/:newsid(\\d+)', async (ctx, next) => {
 	const news = await new News(dbName)
+	const accounts = await new Accounts(dbName)
 	try {
 		const article = await news.find(ctx.params.newsid)
 		await news.updateStatus(ctx.params.newsid, 'released')
+		await accounts.addPoints(article.userid, 15);
 		const mailOpts = generateMailOpts(article, ctx.params.newsid)
 		transporter.sendMail(mailOpts, (err, res) => {
 			if (err) console.log('err', err)
@@ -103,6 +106,7 @@ newsRouter.get('/add', async ctx => {
 
 newsRouter.post('/add', async ctx => {
 	const news = await new News(dbName)
+	const accounts = await new Accounts(dbName)
 	try {
 		ctx.request.body.account = ctx.session.userid
 		if (ctx.request.files.photo.name) {
@@ -111,6 +115,7 @@ newsRouter.post('/add', async ctx => {
 			ctx.request.body.fileType = ctx.request.files.photo.type
 		}
 		await news.add(ctx.request.body)
+		await accounts.addPoints(ctx.session.userid, 10);
 		return ctx.redirect('/?msg=new article added')
 	} catch (err) {
 		ctx.hbs.msg = err.message

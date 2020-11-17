@@ -5,7 +5,7 @@ import bodyParser from 'koa-body'
 const publicRouter = new Router()
 publicRouter.use(bodyParser({ multipart: true }))
 
-import { Accounts } from '../modules/accounts.js'
+import Accounts from '../modules/accounts.js'
 import News from '../modules/news.js'
 const dbName = 'website.db'
 
@@ -19,9 +19,9 @@ publicRouter.get('/', async ctx => {
 	const news = await new News(dbName)
 	try {
 		const newsArticles = await news.all()
-		ctx.hbs = {...ctx.hbs, news: newsArticles}
+		ctx.hbs = { ...ctx.hbs, news: newsArticles }
 		await ctx.render('index', ctx.hbs)
-	} catch(err) {
+	} catch (err) {
 		await ctx.render('error', ctx.hbs)
 	} finally {
 		news.close()
@@ -49,7 +49,7 @@ publicRouter.post('/register', async ctx => {
 		// call the functions in the module
 		await account.register(ctx.request.body.user, ctx.request.body.pass, ctx.request.body.email)
 		ctx.redirect(`/login?msg=new user "${ctx.request.body.user}" added, you need to log in`)
-	} catch(err) {
+	} catch (err) {
 		ctx.hbs.msg = err.message
 		ctx.hbs.body = ctx.request.body
 		console.log(ctx.hbs)
@@ -65,7 +65,7 @@ publicRouter.get('/validate/:user/:token', async ctx => {
 	try {
 		console.log('VALIDATE')
 		console.log(`URL --> ${ctx.request.url}`)
-		if(!ctx.request.url.includes('.css')) {
+		if (!ctx.request.url.includes('.css')) {
 			console.log(ctx.params)
 			const milliseconds = 1000
 			const now = Math.floor(Date.now() / milliseconds)
@@ -74,7 +74,7 @@ publicRouter.get('/validate/:user/:token', async ctx => {
 			ctx.hbs.msg = `account "${ctx.params.user}" has been validated`
 			await ctx.render('login', ctx.hbs)
 		}
-	} catch(err) {
+	} catch (err) {
 		await ctx.render('login', ctx.hbs)
 	}
 })
@@ -97,7 +97,7 @@ publicRouter.post('/login', async ctx => {
 		ctx.session.admin = user.admin
 		const referrer = body.referrer || '/'
 		return ctx.redirect(`${referrer}?msg=you are now logged in...`)
-	} catch(err) {
+	} catch (err) {
 		ctx.hbs.msg = err.message
 		await ctx.render('login', ctx.hbs)
 	} finally {

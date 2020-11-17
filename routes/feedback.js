@@ -1,13 +1,19 @@
 import Router from 'koa-router'
+import Accounts from '../modules/accounts.js'
 import Feedback from '../modules/feedback.js'
+import News from '../modules/news.js'
 
 export const feedbackRouter = new Router({ prefix: '/feedback' })
 
 const dbName = 'website.db'
 
 feedbackRouter.post('/:newsid(\\d+)', async ctx => {
+	const news = await new News(dbName)
 	const feedback = await new Feedback(dbName)
-	console.log(ctx.request.body, 'ctx.body')
+	const accounts = await new Accounts(dbName)
+	const article = await news.find(ctx.params.newsid)
+	console.log(article, 'article');
+	const articleUser = article.userid;
 	const newFeedback = {
 		userid: ctx.hbs.userid,
 		newsid: ctx.params.newsid,
@@ -16,6 +22,7 @@ feedbackRouter.post('/:newsid(\\d+)', async ctx => {
 	}
 	try {
 		await feedback.add(newFeedback)
+		await accounts.addPoints(articleUser, parseInt(ctx.request.body.rating))
 		return ctx.redirect(`/news/${ctx.params.newsid}`)
 	} catch (err) {
 		console.log('err', err)

@@ -1,6 +1,6 @@
 
 import test from 'ava'
-import { Accounts } from '../modules/accounts.js'
+import Accounts from '../modules/accounts.js'
 
 test('REGISTER : register and log in with a valid account', async test => {
 	test.plan(1)
@@ -17,7 +17,7 @@ test('REGISTER : register a duplicate username', async test => {
 		await account.register('doej', 'password', 'doej@gmail.com')
 		await account.register('doej', 'password', 'doej@gmail.com')
 		test.fail('error not thrown')
-	} catch(err) {
+	} catch (err) {
 		test.is(err.message, 'username "doej" already in use', 'incorrect error message')
 	} finally {
 		account.close()
@@ -30,7 +30,7 @@ test('REGISTER : error if blank username', async test => {
 	try {
 		await account.register('', 'password', 'doej@gmail.com')
 		test.fail('error not thrown')
-	} catch(err) {
+	} catch (err) {
 		test.is(err.message, 'missing field', 'incorrect error message')
 	} finally {
 		account.close()
@@ -43,7 +43,7 @@ test('REGISTER : error if blank password', async test => {
 	try {
 		await account.register('doej', '', 'doej@gmail.com')
 		test.fail('error not thrown')
-	} catch(err) {
+	} catch (err) {
 		test.is(err.message, 'missing field', 'incorrect error message')
 	} finally {
 		account.close()
@@ -56,7 +56,7 @@ test('REGISTER : error if blank email', async test => {
 	try {
 		await account.register('doej', 'password', '')
 		test.fail('error not thrown')
-	} catch(err) {
+	} catch (err) {
 		test.is(err.message, 'missing field', 'incorrect error message')
 	} finally {
 		account.close()
@@ -70,7 +70,7 @@ test('REGISTER : error if duplicate email', async test => {
 		await account.register('doej', 'password', 'doej@gmail.com')
 		await account.register('bloggsj', 'newpassword', 'doej@gmail.com')
 		test.fail('error not thrown')
-	} catch(err) {
+	} catch (err) {
 		test.is(err.message, 'email address "doej@gmail.com" is already in use', 'incorrect error message')
 	} finally {
 		account.close()
@@ -84,7 +84,7 @@ test('LOGIN    : invalid username', async test => {
 		await account.register('doej', 'password', 'doej@gmail.com')
 		await account.login('roej', 'password')
 		test.fail('error not thrown')
-	} catch(err) {
+	} catch (err) {
 		test.is(err.message, 'username "roej" not found', 'incorrect error message')
 	} finally {
 		account.close()
@@ -98,7 +98,7 @@ test('LOGIN    : invalid password', async test => {
 		await account.register('doej', 'password', 'doej@gmail.com')
 		await account.login('doej', 'bad')
 		test.fail('error not thrown')
-	} catch(err) {
+	} catch (err) {
 		test.is(err.message, 'invalid password for account "doej"', 'incorrect error message')
 	} finally {
 		account.close()

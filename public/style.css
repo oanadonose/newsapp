@@ -174,7 +174,7 @@ textarea {
 }
 @media screen and (min-width: 1000px) {
   .feedback-feed {
-    max-width: 50%;
+    width: 50%;
   }
 }
 .feedback-feed .feedback-item {
