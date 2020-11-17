@@ -7,7 +7,7 @@ const MS = 1000
 class News {
 
 	constructor(dbName = ':memory:') {
-		return (async () => {
+		return (async() => {
 			this.db = await sqlite.open(dbName)
 
 			const sql = 'CREATE TABLE IF NOT EXISTS news\
@@ -86,27 +86,22 @@ class News {
 	async edit(article) {
 		if (!article.title) throw new Error('missing title')
 		if (!article.article) throw new Error('missing article body')
-		let filename;
+		let filename
 		if (article.fileName) {
 			filename = `${Date.now()}.${mime.extension(article.fileType)}`
 			await fs.copy(article.filePath, `public/images/${filename}`)
 		}
 		const timestamp = Math.floor(Date.now() / MS)
-		try {
-			let sql;
-			if (!filename) {
-				sql = `UPDATE news SET title="${article.title}", article="${article.article}",\ 
+		let sql
+		if (!filename) {
+			sql = `UPDATE news SET title="${article.title}", article="${article.article}",\ 
 				dateAdded="${timestamp}", status="pending" WHERE id=${article.newsid};`
-			}
-			else {
-				sql = `UPDATE news SET title="${article.title}", article="${article.article}",\
+		} else {
+			sql = `UPDATE news SET title="${article.title}", article="${article.article}",\
 				photo="${filename}", dateAdded="${timestamp}", status="pending" WHERE id=${article.newsid};`
-			}
-			await this.db.run(sql)
-			return true
-		} catch (err) {
-			throw err
 		}
+		await this.db.run(sql)
+		return true
 	}
 
 	async close() {

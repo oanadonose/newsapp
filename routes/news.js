@@ -19,6 +19,9 @@ const newsRouter = new Router({ prefix: '/news' })
 
 const dbName = 'website.db'
 
+const articleAddedPts = 10
+const articleReleasedPts = 15
+
 //helpers for hbs
 helpers.comparison()
 
@@ -56,13 +59,13 @@ newsRouter.get('/:newsid(\\d+)', async ctx => {
 	}
 })
 
-newsRouter.post('/release/:newsid(\\d+)', async (ctx, next) => {
+newsRouter.post('/release/:newsid(\\d+)', async(ctx, next) => {
 	const news = await new News(dbName)
 	const accounts = await new Accounts(dbName)
 	try {
 		const article = await news.find(ctx.params.newsid)
 		await news.updateStatus(ctx.params.newsid, 'released')
-		await accounts.addPoints(article.userid, 15);
+		await accounts.addPoints(article.userid, articleReleasedPts) //15
 		const mailOpts = generateMailOpts(article, ctx.params.newsid)
 		transporter.sendMail(mailOpts, (err, res) => {
 			if (err) console.log('err', err)
@@ -77,7 +80,7 @@ newsRouter.post('/release/:newsid(\\d+)', async (ctx, next) => {
 	}
 })
 
-newsRouter.post('/revise/:newsid(\\d+)', async (ctx, next) => {
+newsRouter.post('/revise/:newsid(\\d+)', async(ctx, next) => {
 	const news = await new News(dbName)
 	console.log('in revised route')
 	try {
@@ -115,11 +118,10 @@ newsRouter.post('/add', async ctx => {
 			ctx.request.body.fileType = ctx.request.files.photo.type
 		}
 		await news.add(ctx.request.body)
-		await accounts.addPoints(ctx.session.userid, 10);
+		await accounts.addPoints(ctx.session.userid, articleAddedPts) //10
 		return ctx.redirect('/?msg=new article added')
 	} catch (err) {
 		ctx.hbs.msg = err.message
-		ctx.hbs.body = ctx.request.body
 		await ctx.render('index', ctx.hbs)
 	} finally {
 		news.close()
@@ -142,7 +144,6 @@ newsRouter.post('/add/:newsid(\\d+)', async ctx => {
 	const news = await new News(dbName)
 	try {
 		if (ctx.request.files.photo.name) {
-			console.log(ctx.request.files.photo.name, 'ctx.req.files.pohoto.name')
 			ctx.request.body.filePath = ctx.request.files.photo.path
 			ctx.request.body.fileName = ctx.request.files.photo.name
 			ctx.request.body.fileType = ctx.request.files.photo.type

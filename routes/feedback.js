@@ -12,8 +12,7 @@ feedbackRouter.post('/:newsid(\\d+)', async ctx => {
 	const feedback = await new Feedback(dbName)
 	const accounts = await new Accounts(dbName)
 	const article = await news.find(ctx.params.newsid)
-	console.log(article, 'article');
-	const articleUser = article.userid;
+	const articleUser = article.userid
 	const newFeedback = {
 		userid: ctx.hbs.userid,
 		newsid: ctx.params.newsid,
@@ -25,7 +24,6 @@ feedbackRouter.post('/:newsid(\\d+)', async ctx => {
 		await accounts.addPoints(articleUser, parseInt(ctx.request.body.rating))
 		return ctx.redirect(`/news/${ctx.params.newsid}`)
 	} catch (err) {
-		console.log('err', err)
 		await ctx.render('error', ctx.hbs)
 	}
 })

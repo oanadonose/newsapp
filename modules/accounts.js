@@ -7,7 +7,7 @@ const saltRounds = 10
 class Accounts {
 
 	constructor(dbName = ':memory:') {
-		return (async () => {
+		return (async() => {
 			this.db = await sqlite.open(dbName)
 			// we need this table to store the user accounts
 			const sql = 'CREATE TABLE IF NOT EXISTS users\
@@ -41,7 +41,7 @@ class Accounts {
 	}
 
 	async getUserLeaderboards() {
-		let sql = `SELECT * FROM users ORDER BY points DESC LIMIT 10;`
+		const sql = 'SELECT * FROM users ORDER BY points DESC LIMIT 10;'
 		const data = await this.db.all(sql)
 		return data
 	}
@@ -73,12 +73,11 @@ class Accounts {
 	}
 
 	async addPoints(id, pointsToAdd) {
-		if (typeof (pointsToAdd) === "number") {
+		if (typeof pointsToAdd === 'number') {
 			const sql = `UPDATE users SET points=points+${pointsToAdd} WHERE id=${id};`
-			console.log(sql, 'sql add points');
+			console.log(sql, 'sql add points')
 			await this.db.run(sql)
-		}
-		else throw new Error('points must be integer')
+		} else throw new Error('points must be integer')
 	}
 	async close() {
 		await this.db.close()
