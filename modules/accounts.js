@@ -12,7 +12,7 @@ class Accounts {
 			// we need this table to store the user accounts
 			const sql = 'CREATE TABLE IF NOT EXISTS users\
 				(id INTEGER PRIMARY KEY AUTOINCREMENT, user TEXT NOT NULL, pass TEXT NOT NULL, email TEXT NOT NULL,\
-					admin INTEGER DEFAULT 0, points INTEGER DEFAULT 0);'
+					admin INTEGER DEFAULT 0, points INTEGER DEFAULT 0, subscribed INTEGER NOT NULL DEFAULT 0);'
 			await this.db.run(sql)
 			return this
 		})()
@@ -24,7 +24,7 @@ class Accounts {
 	 * @param {String} pass the chosen password
 	 * @returns {Boolean} returns true if the new user has been added
 	 */
-	async register(user, pass, email) {
+	async register(user, pass, email, subscribed) {
 		Array.from(arguments).forEach(val => {
 			if (val.length === 0) throw new Error('missing field')
 		})
@@ -35,7 +35,10 @@ class Accounts {
 		const emails = await this.db.get(sql)
 		if (emails.records !== 0) throw new Error(`email address "${email}" is already in use`)
 		pass = await bcrypt.hash(pass, saltRounds)
-		sql = `INSERT INTO users(user, pass, email) VALUES("${user}", "${pass}", "${email}")`
+    if(subscribed=="on") {
+      sql = `INSERT INTO users(user, pass, email, subscribed) VALUES("${user}", "${pass}", "${email}", 1);`
+    }
+    else sql = `INSERT INTO users(user, pass, email, subscribed) VALUES("${user}", "${pass}", "${email}");`
 		await this.db.run(sql)
 		return true
 	}
@@ -45,6 +48,12 @@ class Accounts {
 		const data = await this.db.all(sql)
 		return data
 	}
+  
+  async getSubscribedUsers() {
+    const sql = 'SELECT * FROM users WHERE subscribed=1;'
+    const data = await this.db.all(sql)
+    return data
+  }
 
 	/**
 	 * checks to see if a set of login credentials are valid
