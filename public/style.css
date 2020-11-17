@@ -155,6 +155,32 @@ textarea {
   }
 }
 
+.feedback-add {
+  margin: 2em;
+}
+
+.feedback-feed {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 80%;
+}
+@media screen and (min-width: 1000px) {
+  .feedback-feed {
+    max-width: 50%;
+  }
+}
+.feedback-feed .feedback-item {
+  width: 100%;
+}
+.feedback-feed .feedback-item .header {
+  display: flex;
+  justify-content: space-between;
+}
+.feedback-feed .comment {
+  margin: 1em 0;
+}
+
 /*
 html5doctor.com Reset Stylesheet
 v1.6.1

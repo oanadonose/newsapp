@@ -161,6 +161,31 @@ textarea {
 		}
 	}	
 }
+.feedback-add {
+	margin: 2em;
+}
+.feedback-feed {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	max-width: 80%;
+
+	@media screen and (min-width: 1000px) {
+		max-width: 50%;
+	}
+
+	.feedback-item {
+		width: 100%;
+
+		.header {
+			display: flex;
+			justify-content: space-between;
+		}
+	}
+	.comment {
+		margin: 1em 0;
+	}
+}
 
 /*
 html5doctor.com Reset Stylesheet
