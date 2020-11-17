@@ -132,6 +132,7 @@ newsRouter.post('/add/:newsid(\\d+)', async ctx => {
 	const news = await new News(dbName)
 	try {
 		if(ctx.request.files.photo.name) {
+      console.log(ctx.request.files.photo.name,'ctx.req.files.pohoto.name')
 			ctx.request.body.filePath = ctx.request.files.photo.path
 			ctx.request.body.fileName = ctx.request.files.photo.name
 			ctx.request.body.fileType = ctx.request.files.photo.type
