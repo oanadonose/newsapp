@@ -5,7 +5,7 @@ import bodyParser from 'koa-body'
 const publicRouter = new Router()
 publicRouter.use(bodyParser({ multipart: true }))
 
-import { Accounts } from '../modules/accounts.js'
+import Accounts from '../modules/accounts.js'
 import News from '../modules/news.js'
 const dbName = 'website.db'
 
@@ -17,11 +17,15 @@ const dbName = 'website.db'
  */
 publicRouter.get('/', async ctx => {
 	const news = await new News(dbName)
+	const accounts = await new Accounts(dbName)
 	try {
 		const newsArticles = await news.all()
-		ctx.hbs = {...ctx.hbs, news: newsArticles}
+		console.log('before leaders')
+		const leaders = await accounts.getUserLeaderboards()
+		console.log(leaders, 'leaders')
+		ctx.hbs = { ...ctx.hbs, news: newsArticles, leaders }
 		await ctx.render('index', ctx.hbs)
-	} catch(err) {
+	} catch (err) {
 		await ctx.render('error', ctx.hbs)
 	} finally {
 		news.close()
@@ -47,9 +51,10 @@ publicRouter.post('/register', async ctx => {
 	const account = await new Accounts(dbName)
 	try {
 		// call the functions in the module
-		await account.register(ctx.request.body.user, ctx.request.body.pass, ctx.request.body.email)
+    console.log(ctx.request.body)
+		await account.register(ctx.request.body.user, ctx.request.body.pass, ctx.request.body.email, ctx.request.body.subscribed)
 		ctx.redirect(`/login?msg=new user "${ctx.request.body.user}" added, you need to log in`)
-	} catch(err) {
+	} catch (err) {
 		ctx.hbs.msg = err.message
 		ctx.hbs.body = ctx.request.body
 		console.log(ctx.hbs)
@@ -65,7 +70,7 @@ publicRouter.get('/validate/:user/:token', async ctx => {
 	try {
 		console.log('VALIDATE')
 		console.log(`URL --> ${ctx.request.url}`)
-		if(!ctx.request.url.includes('.css')) {
+		if (!ctx.request.url.includes('.css')) {
 			console.log(ctx.params)
 			const milliseconds = 1000
 			const now = Math.floor(Date.now() / milliseconds)
@@ -74,7 +79,7 @@ publicRouter.get('/validate/:user/:token', async ctx => {
 			ctx.hbs.msg = `account "${ctx.params.user}" has been validated`
 			await ctx.render('login', ctx.hbs)
 		}
-	} catch(err) {
+	} catch (err) {
 		await ctx.render('login', ctx.hbs)
 	}
 })
@@ -97,7 +102,7 @@ publicRouter.post('/login', async ctx => {
 		ctx.session.admin = user.admin
 		const referrer = body.referrer || '/'
 		return ctx.redirect(`${referrer}?msg=you are now logged in...`)
-	} catch(err) {
+	} catch (err) {
 		ctx.hbs.msg = err.message
 		await ctx.render('login', ctx.hbs)
 	} finally {

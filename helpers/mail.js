@@ -14,3 +14,31 @@ export const generateMailOpts = (article, id) => {
 	}
 	return mailOpts
 }
+
+export const subscriptionMailOpts = (user, articles) => {
+  const mailOpts = {
+    from: `${process.env.user}`,
+    to: user.email,
+    subject: `Daily News Digest`,
+    replyTo: user.email,
+    html: `
+          <h1>Hello</h1>
+          <p>Here's the top 3 news of the day: <p>
+          <div>
+            <h2>${articles[0].title}</h2>
+            <h4>by ${articles[0].user}</h4>
+          <div>
+          <div>
+            <h2>${articles[1].title}</h2>
+            <h4>by ${articles[1].user}</h4>
+          <div>
+          <div>
+            <h2>${articles[2].title}</h2>
+            <h4>by ${articles[2].user}</h4>
+          <div>
+          `
+  }
+  return mailOpts
+}
+
+
