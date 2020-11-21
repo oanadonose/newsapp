@@ -1,7 +1,5 @@
 import test from 'ava'
-import News from '../modules/news.js'
 import Feedback from '../modules/feedback.js'
-import { feedbackRouter } from '../routes/feedback.js'
 
 test('ADD FEEDBACK : successful submit no comment', async test => {
 	test.plan(1)
@@ -48,7 +46,7 @@ test('ADD FEEDBACK : missing rating', async test => {
 		userid: '99',
 	}
 	try {
-		const add = await feedback.add(fakeFeedback)
+		await feedback.add(fakeFeedback)
 		test.fail('error not thrown')
 	} catch (err) {
 		test.is(err.message, 'missing rating', 'incorrect error message')
@@ -65,7 +63,7 @@ test('ADD FEEDBACK : missing userid', async test => {
 		rating: 3
 	}
 	try {
-		const add = await feedback.add(fakeFeedback)
+		await feedback.add(fakeFeedback)
 		test.fail('error not thrown')
 	} catch (err) {
 		test.is(err.message, 'missing user id', 'incorrect error message')
@@ -82,7 +80,7 @@ test('ADD FEEDBACK : missing newsid', async test => {
 		rating: 3
 	}
 	try {
-		const add = await feedback.add(fakeFeedback)
+		await feedback.add(fakeFeedback)
 		test.fail('error not thrown')
 	} catch (err) {
 		test.is(err.message, 'missing news id', 'incorrect error message')

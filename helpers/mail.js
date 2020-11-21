@@ -15,34 +15,29 @@ export const generateMailOpts = (article, id) => {
 	return mailOpts
 }
 
-export const subscriptionMailOpts = (user, articles) => {
-  const mailOpts = {
-    from: `${process.env.user}`,
-    to: user.email,
-    subject: `Daily News Digest`,
-    replyTo: user.email,
-    html: `
-          <h1>Hello</h1>
-          <p>Here's the top 3 news of the day: <p>
-          <div>
-            <h2>${articles[0].title}</h2>
-			<h4>by ${articles[0].user}</h4>
-			<a href="${process.env.host}/news/${articles[0].id}">Linky</a>
-          <div>
-          <div>
-            <h2>${articles[1].title}</h2>
-			<h4>by ${articles[1].user}</h4>
-			<a href="${process.env.host}/news/${articles[1].id}">Linky</a>
-          <div>
-          <div>
-            <h2>${articles[2].title}</h2>
-			<h4>by ${articles[2].user}</h4>
-			<a href="${process.env.host}/news/${articles[2].id}">Linky</a>
-          <div>
-          `
-  }
-  return mailOpts
+const genHtml = (articles, count) => {
+	let html = `<h1>Hello</h1>
+	<p>Here's the top ${count} news of the day: <p>
+	`
+	for(let i=0;i<count;i++) {
+		html = `${html}<div>
+		<h2>${articles[i].title}</h2>
+		<h4>by ${articles[i].user}</h4>
+		<a href="${process.env.host}/news/${articles[i].id}">Linky</a>
+	  <div>`
+	}
+	return html
 }
 
+export const subscriptionMailOpts = (user, articles, count) => {
+	const mailOpts = {
+		from: `${process.env.user}`,
+		to: user.email,
+		subject: 'Daily News Digest',
+		replyTo: user.email,
+		html: genHtml(articles, count)
+	}
+	return mailOpts
+}
 
 

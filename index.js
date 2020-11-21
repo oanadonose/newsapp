@@ -25,7 +25,7 @@ const transporter = nodemailer.createTransport({
 
 //every day at midnight task
 cron.schedule('0 0 * * *', async() => {
-	console.log('running daily mailing task: ');
+	const count = 3
 	const accounts = await new Accounts(dbName)
 	const news = await new News(dbName)
 	//get subscribed users from db
@@ -34,13 +34,13 @@ cron.schedule('0 0 * * *', async() => {
 	const topNews = await news.all()
 	//generate email and send
 	subscribedUsers.forEach(subscribedUser => {
-		const mailOpts = subscriptionMailOpts(subscribedUser, topNews)
+		const mailOpts = subscriptionMailOpts(subscribedUser, topNews, count)
 		transporter.sendMail(mailOpts, (err, res) => {
 			if (err) console.log('err', err)
 			else console.log('res', res)
 		})
 	})
-});
+})
 
 const app = new Koa()
 app.keys = ['darkSecret']
@@ -52,7 +52,7 @@ app.use(serve('public'))
 app.use(session(app))
 app.use(views('views', { extension: 'handlebars' }, { map: { handlebars: 'handlebars' } }))
 
-app.use(async (ctx, next) => {
+app.use(async(ctx, next) => {
 	console.log(`${ctx.method} ${ctx.path}`)
 	ctx.hbs = {
 		authorised: ctx.session.authorised,
@@ -67,4 +67,4 @@ app.use(async (ctx, next) => {
 
 app.use(apiRouter.routes(), apiRouter.allowedMethods())
 
-app.listen(port, async () => console.log(`listening on port ${port}`))
+app.listen(port, async() => console.log(`listening on port ${port}`))
