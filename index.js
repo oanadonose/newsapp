@@ -24,22 +24,22 @@ const transporter = nodemailer.createTransport({
 })
 
 //every day at midnight task
-cron.schedule('0 0 * * *', async () => {
-   console.log('running a task every min');
-  const accounts = await new Accounts(dbName)
-  const news = await new News(dbName)
-  //get subscribed users from db
-  const subscribedUsers = await accounts.getSubscribedUsers()
-  //get top 3 news from db
-  const topNews = await news.all()
-  //generate email and send
-  subscribedUsers.forEach(subscribedUser => {
-    const mailOpts = subscriptionMailOpts(subscribedUser, topNews)
+cron.schedule('0 0 * * *', async() => {
+	console.log('running daily mailing task: ');
+	const accounts = await new Accounts(dbName)
+	const news = await new News(dbName)
+	//get subscribed users from db
+	const subscribedUsers = await accounts.getSubscribedUsers()
+	//get top 3 news from db
+	const topNews = await news.all()
+	//generate email and send
+	subscribedUsers.forEach(subscribedUser => {
+		const mailOpts = subscriptionMailOpts(subscribedUser, topNews)
 		transporter.sendMail(mailOpts, (err, res) => {
 			if (err) console.log('err', err)
 			else console.log('res', res)
 		})
-  }) 
+	})
 });
 
 const app = new Koa()
@@ -50,9 +50,9 @@ const port = process.env.PORT || defaultPort
 
 app.use(serve('public'))
 app.use(session(app))
-app.use(views('views', { extension: 'handlebars' }, {map: { handlebars: 'handlebars' }}))
+app.use(views('views', { extension: 'handlebars' }, { map: { handlebars: 'handlebars' } }))
 
-app.use( async(ctx, next) => {
+app.use(async (ctx, next) => {
 	console.log(`${ctx.method} ${ctx.path}`)
 	ctx.hbs = {
 		authorised: ctx.session.authorised,
@@ -61,10 +61,10 @@ app.use( async(ctx, next) => {
 		admin: ctx.session.admin,
 		host: `https://${ctx.host}`
 	}
-	for(const key in ctx.query) ctx.hbs[key] = ctx.query[key]
+	for (const key in ctx.query) ctx.hbs[key] = ctx.query[key]
 	await next()
 })
 
 app.use(apiRouter.routes(), apiRouter.allowedMethods())
 
-app.listen(port, async() => console.log(`listening on port ${port}`))
+app.listen(port, async () => console.log(`listening on port ${port}`))

@@ -26,19 +26,23 @@ export const subscriptionMailOpts = (user, articles) => {
           <p>Here's the top 3 news of the day: <p>
           <div>
             <h2>${articles[0].title}</h2>
-            <h4>by ${articles[0].user}</h4>
+			<h4>by ${articles[0].user}</h4>
+			<a href="${process.env.host}/news/${articles[0].id}">Linky</a>
           <div>
           <div>
             <h2>${articles[1].title}</h2>
-            <h4>by ${articles[1].user}</h4>
+			<h4>by ${articles[1].user}</h4>
+			<a href="${process.env.host}/news/${articles[1].id}">Linky</a>
           <div>
           <div>
             <h2>${articles[2].title}</h2>
-            <h4>by ${articles[2].user}</h4>
+			<h4>by ${articles[2].user}</h4>
+			<a href="${process.env.host}/news/${articles[2].id}">Linky</a>
           <div>
           `
   }
   return mailOpts
 }
+
 
 

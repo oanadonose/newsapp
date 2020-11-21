@@ -7,7 +7,7 @@ const saltRounds = 10
 class Accounts {
 
 	constructor(dbName = ':memory:') {
-		return (async() => {
+		return (async () => {
 			this.db = await sqlite.open(dbName)
 			// we need this table to store the user accounts
 			const sql = 'CREATE TABLE IF NOT EXISTS users\
@@ -35,10 +35,10 @@ class Accounts {
 		const emails = await this.db.get(sql)
 		if (emails.records !== 0) throw new Error(`email address "${email}" is already in use`)
 		pass = await bcrypt.hash(pass, saltRounds)
-    if(subscribed=="on") {
-      sql = `INSERT INTO users(user, pass, email, subscribed) VALUES("${user}", "${pass}", "${email}", 1);`
-    }
-    else sql = `INSERT INTO users(user, pass, email, subscribed) VALUES("${user}", "${pass}", "${email}");`
+		if (subscribed === "on") {
+			sql = `INSERT INTO users(user, pass, email, subscribed) VALUES("${user}", "${pass}", "${email}", 1);`
+		}
+		else sql = `INSERT INTO users(user, pass, email, subscribed) VALUES("${user}", "${pass}", "${email}", 0);`
 		await this.db.run(sql)
 		return true
 	}
@@ -48,12 +48,12 @@ class Accounts {
 		const data = await this.db.all(sql)
 		return data
 	}
-  
-  async getSubscribedUsers() {
-    const sql = 'SELECT * FROM users WHERE subscribed=1;'
-    const data = await this.db.all(sql)
-    return data
-  }
+
+	async getSubscribedUsers() {
+		const sql = 'SELECT * FROM users WHERE subscribed=1;'
+		const data = await this.db.all(sql)
+		return data
+	}
 
 	/**
 	 * checks to see if a set of login credentials are valid
