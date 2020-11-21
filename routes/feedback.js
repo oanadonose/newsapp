@@ -7,6 +7,12 @@ export const feedbackRouter = new Router({ prefix: '/feedback' })
 
 const dbName = 'website.db'
 
+/**
+ * Post new feedback item Script
+ *
+ * @name Post Feedback Script
+ * @route {POST} /feedback/:newsid
+ */
 feedbackRouter.post('/:newsid(\\d+)', async ctx => {
 	const news = await new News(dbName)
 	const feedback = await new Feedback(dbName)
@@ -28,17 +34,3 @@ feedbackRouter.post('/:newsid(\\d+)', async ctx => {
 	}
 })
 
-
-//feedbackRouter.get('/:newsid(\\d+)', async ctx => {
-//	const feedback = await new Feedback(dbName)
-//	try {
-//		const feedback = await feedback.getByNewsId(ctx.params.newsid)
-
-//		ctx.hbs = { ...ctx.hbs, feedback }
-//	} catch (err) {
-//		console.log('err', err)
-//		await ctx.render('error', ctx.hbs)
-//	} finally {
-//		feedback.close()
-//	}
-//})

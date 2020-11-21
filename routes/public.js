@@ -64,9 +64,20 @@ publicRouter.post('/register', async ctx => {
 		account.close()
 	}
 })
-
+/**
+ * The new user validation page.
+ *
+ * @name Postregister Page
+ * @route {GET} /postregister
+ */
 publicRouter.get('/postregister', async ctx => await ctx.render('validate'))
 
+/**
+ * The script to validate new user registrations.
+ *
+ * @name Validate Script
+ * @route {GET} /validate/:user/:token
+ */
 publicRouter.get('/validate/:user/:token', async ctx => {
 	try {
 		console.log('VALIDATE')
@@ -85,11 +96,23 @@ publicRouter.get('/validate/:user/:token', async ctx => {
 	}
 })
 
+/**
+ * The login page.
+ * 
+ * @name Login Page
+ * @route {GET} /login
+ */
 publicRouter.get('/login', async ctx => {
 	console.log(ctx.hbs)
 	await ctx.render('login', ctx.hbs)
 })
 
+/**
+ * The login script.
+ * 
+ * @name Login Script
+ * @route {POST} /login
+ */
 publicRouter.post('/login', async ctx => {
 	const account = await new Accounts(dbName)
 	ctx.hbs.body = ctx.request.body
@@ -111,6 +134,12 @@ publicRouter.post('/login', async ctx => {
 	}
 })
 
+/**
+ * The logout script.
+ * 
+ * @name Logout Script
+ * @route {POST} /logout
+ */
 publicRouter.get('/logout', async ctx => {
 	ctx.session.authorised = null
 	//delete cookies
