@@ -7,7 +7,7 @@ const saltRounds = 10
 class Accounts {
 
 	constructor(dbName = ':memory:') {
-		return (async() => {
+		return (async () => {
 			this.db = await sqlite.open(dbName)
 			// we need this table to store the user accounts
 			const sql = 'CREATE TABLE IF NOT EXISTS users\
@@ -25,7 +25,18 @@ class Accounts {
 	 * @returns {Boolean} returns true if the new user has been added
 	 */
 	async register(user, pass, email, subscribed) {
-		Array.from(arguments).forEach(val => {
+		const args = {
+			user: '',
+			pass: '',
+			email: '',
+			subscribed: ''
+		}
+		if (subscribed === undefined) {
+			args.user = user
+			args.pass = pass
+			args.email = email
+		}
+		Array.from(args).forEach(val => {
 			if (val.length === 0) throw new Error('missing field')
 		})
 		let sql = `SELECT COUNT(id) as records FROM users WHERE user="${user}";`

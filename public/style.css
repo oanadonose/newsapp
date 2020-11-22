@@ -93,11 +93,15 @@ h2 {
 
 aside {
   margin: 2em;
+  max-height: fit-content;
 }
 @media screen and (min-width: 1000px) {
   aside {
     width: 15%;
   }
+}
+aside .leaderboards {
+  min-width: 170px;
 }
 aside .leaderboards .leader-row, aside .leaderboards .header {
   display: flex;
@@ -106,6 +110,9 @@ aside .leaderboards .leader-row, aside .leaderboards .header {
   padding: 0.5em;
   border-bottom: 1px solid rgba(211, 211, 211, 0.4);
   border-left: 1px solid rgba(211, 211, 211, 0.4);
+}
+aside .leaderboards .leader-row p, aside .leaderboards .header p {
+  padding: 0.5em;
 }
 aside .leaderboards .header {
   border-radius: 1em 1em 0 0;
@@ -196,7 +203,7 @@ textarea {
   display: flex;
   flex-direction: column;
   align-items: center;
-  max-width: 80%;
+  width: 100%;
   padding: 1.5em;
   background-color: rgba(211, 211, 211, 0.4);
   border-radius: 1em;

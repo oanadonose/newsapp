@@ -104,11 +104,13 @@ h2 {
 //leaderboards
 aside {
 	margin: 2em;
+	max-height: fit-content;
 	
 	@media screen and (min-width: 1000px) {
 		width: 15%;
 	}
 	.leaderboards {
+		min-width: 170px;
 		.leader-row, .header {
 			display: flex;
 			flex-direction: row;
@@ -116,6 +118,9 @@ aside {
 			padding: 0.5em;
 			border-bottom: 1px solid rgba(211,211,211, 0.4);
 			border-left: 1px solid rgba(211,211,211, 0.4);
+			p {
+				padding: 0.5em;
+			}
 		}
 		.header {
 			
@@ -206,7 +211,7 @@ textarea {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	max-width: 80%;
+	width: 100%;
 	padding: 1.5em;
 	background-color: rgba(211,211,211, 0.4);
 	border-radius: 1em;
