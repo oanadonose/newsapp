@@ -35,17 +35,22 @@
 	<div class="home-body">
 		<aside>
 			<div class="leaderboards">
-				<h3>Leaderboards</h3>
-				<div class="header">
-					<p>User</p>
-					<p>Points</p>
+				<div class="title-bar">
+					<h3>Leaderboards</h3>
+					<button type="button" class="toggle-btn">-</button>
 				</div>
-				{{#each leaders}}
-				<div class="leader-row">
-					<p>{{this.user}}</p>
-					<p>{{this.points}}</p>
+				<div class="table-container">
+					<div class="header">
+						<p>User</p>
+						<p>Points</p>
+					</div>
+					{{#each leaders}}
+					<div class="leader-row">
+						<p>{{this.user}}</p>
+						<p>{{this.points}}</p>
+					</div>
+					{{/each}}
 				</div>
-				{{/each}}
 			</div>
 		</aside>
 		<main>
@@ -54,8 +59,7 @@
 				<article>
 					<h2><a href="/news/{{this.id}}">{{this.title}}</a></h2>
 					<p class="date">{{this.dateAdded}}</p>
-					<div><img src="images/{{this.photo}}"></img></div>
-
+					<img src="images/{{this.photo}}"></img>
 				</article>
 				{{/each}}
 			</div>

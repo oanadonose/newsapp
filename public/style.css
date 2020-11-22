@@ -36,7 +36,6 @@ header h1 {
 article {
   max-width: 80%;
   margin: 1em;
-  padding: 0.8em;
   background-color: rgba(211, 211, 211, 0.4);
   border-radius: 0.6em;
   display: flex;
@@ -45,7 +44,7 @@ article {
   padding: 1em;
 }
 article img {
-  width: 350px;
+  max-width: 100%;
   margin: 0.5em;
 }
 article .date {
@@ -102,6 +101,12 @@ aside {
 }
 aside .leaderboards {
   min-width: 170px;
+}
+aside .leaderboards .title-bar {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  justify-content: space-between;
 }
 aside .leaderboards .leader-row, aside .leaderboards .header {
   display: flex;
