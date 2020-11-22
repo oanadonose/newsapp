@@ -38,6 +38,15 @@ header {
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: space-around;
+  article {
+	  width: 25%;
+	  img {
+		max-width:300px;
+		max-height:200px;
+		width: auto;
+		height: auto;
+	  }
+  }
 }
 
 @media only screen and (max-width: 450px) {

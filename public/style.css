@@ -27,6 +27,15 @@ header h1 {
   flex-wrap: wrap;
   justify-content: space-around;
 }
+.feed article {
+  width: 25%;
+}
+.feed article img {
+  max-width: 300px;
+  max-height: 200px;
+  width: auto;
+  height: auto;
+}
 
 @media only screen and (max-width: 450px) {
   article img {
