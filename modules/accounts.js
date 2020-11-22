@@ -7,7 +7,7 @@ const saltRounds = 10
 class Accounts {
 
 	constructor(dbName = ':memory:') {
-		return (async () => {
+		return (async() => {
 			this.db = await sqlite.open(dbName)
 			// we need this table to store the user accounts
 			const sql = 'CREATE TABLE IF NOT EXISTS users\
@@ -25,18 +25,8 @@ class Accounts {
 	 * @returns {Boolean} returns true if the new user has been added
 	 */
 	async register(user, pass, email, subscribed) {
-		const args = {
-			user: '',
-			pass: '',
-			email: '',
-			subscribed: ''
-		}
-		if (subscribed === undefined) {
-			args.user = user
-			args.pass = pass
-			args.email = email
-		}
-		Array.from(args).forEach(val => {
+
+		Array.from(arguments).forEach(val => {
 			if (val.length === 0) throw new Error('missing field')
 		})
 		let sql = `SELECT COUNT(id) as records FROM users WHERE user="${user}";`
@@ -46,9 +36,8 @@ class Accounts {
 		const emails = await this.db.get(sql)
 		if (emails.records !== 0) throw new Error(`email address "${email}" is already in use`)
 		pass = await bcrypt.hash(pass, saltRounds)
-		if (subscribed === 'on') {
-			sql = `INSERT INTO users(user, pass, email, subscribed) VALUES("${user}", "${pass}", "${email}", 1);`
-		} else sql = `INSERT INTO users(user, pass, email, subscribed) VALUES("${user}", "${pass}", "${email}", 0);`
+		sql = `INSERT INTO users(user, pass, email, subscribed) 
+      VALUES("${user}", "${pass}", "${email}", ${subscribed === 'on' ? '1' : '0'});`
 		await this.db.run(sql)
 		return true
 	}

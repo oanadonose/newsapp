@@ -53,7 +53,7 @@ publicRouter.post('/register', async ctx => {
 		// call the functions in the module
 		console.log(ctx.request.body)
 		await account.register(ctx.request.body.user, ctx.request.body.pass,
-			ctx.request.body.email, ctx.request.body.subscribed)
+			ctx.request.body.email, ctx.request.body.subscribed || 'off')
 		ctx.redirect(`/login?msg=new user "${ctx.request.body.user}" added, you need to log in`)
 	} catch (err) {
 		ctx.hbs.msg = err.message
@@ -98,7 +98,7 @@ publicRouter.get('/validate/:user/:token', async ctx => {
 
 /**
  * The login page.
- * 
+ *
  * @name Login Page
  * @route {GET} /login
  */
@@ -109,7 +109,7 @@ publicRouter.get('/login', async ctx => {
 
 /**
  * The login script.
- * 
+ *
  * @name Login Script
  * @route {POST} /login
  */
@@ -136,7 +136,7 @@ publicRouter.post('/login', async ctx => {
 
 /**
  * The logout script.
- * 
+ *
  * @name Logout Script
  * @route {POST} /logout
  */

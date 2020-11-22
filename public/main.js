@@ -10,13 +10,12 @@ window.addEventListener('DOMContentLoaded', () => {
 const toggleLeaderboards = () => {
 	if (document.querySelector('.table-container').hidden) {
 		document.querySelector('.table-container').hidden = false
-	}
-	else {
+	} else {
 		document.querySelector('.table-container').hidden = true
 	}
 }
 
 const toggleBtn = document.querySelector('.toggle-btn')
-toggleBtn.addEventListener("click", toggleLeaderboards)
+toggleBtn.addEventListener('click', toggleLeaderboards)
 
 

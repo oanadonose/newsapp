@@ -45,8 +45,8 @@ cron.schedule('0 0 * * *', async() => {
 const app = new Koa()
 app.keys = ['darkSecret']
 
-const defaultPort = 8080
-const port = process.env.PORT || defaultPort
+const defaultPort = 5000
+const port = defaultPort
 
 app.use(serve('public'))
 app.use(session(app))
