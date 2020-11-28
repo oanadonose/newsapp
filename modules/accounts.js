@@ -25,6 +25,7 @@ class Accounts {
 	 * @returns {Boolean} returns true if the new user has been added
 	 */
 	async register(user, pass, email, subscribed) {
+
 		Array.from(arguments).forEach(val => {
 			if (val.length === 0) throw new Error('missing field')
 		})
@@ -35,10 +36,8 @@ class Accounts {
 		const emails = await this.db.get(sql)
 		if (emails.records !== 0) throw new Error(`email address "${email}" is already in use`)
 		pass = await bcrypt.hash(pass, saltRounds)
-    if(subscribed=="on") {
-      sql = `INSERT INTO users(user, pass, email, subscribed) VALUES("${user}", "${pass}", "${email}", 1);`
-    }
-    else sql = `INSERT INTO users(user, pass, email, subscribed) VALUES("${user}", "${pass}", "${email}");`
+		sql = `INSERT INTO users(user, pass, email, subscribed) 
+      VALUES("${user}", "${pass}", "${email}", ${subscribed === 'on' ? '1' : '0'});`
 		await this.db.run(sql)
 		return true
 	}
@@ -48,12 +47,12 @@ class Accounts {
 		const data = await this.db.all(sql)
 		return data
 	}
-  
-  async getSubscribedUsers() {
-    const sql = 'SELECT * FROM users WHERE subscribed=1;'
-    const data = await this.db.all(sql)
-    return data
-  }
+
+	async getSubscribedUsers() {
+		const sql = 'SELECT * FROM users WHERE subscribed=1;'
+		const data = await this.db.all(sql)
+		return data
+	}
 
 	/**
 	 * checks to see if a set of login credentials are valid

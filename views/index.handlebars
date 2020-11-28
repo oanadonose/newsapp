@@ -9,6 +9,7 @@
 	<meta name="author" content="Mark Tyers">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link href="{{host}}/style.css" type="text/css" rel="stylesheet" />
+	<script type="module" src="main.js"></script>
 </head>
 
 <body>
@@ -26,34 +27,39 @@
 			{{/if}}
 		</div>
 	</header>
-	{{#if msg}}
-	<p class="msg">{{msg}}</p>
-	{{/if}}
+	<div class="msg">
+		{{#if msg}}
+		<p>{{msg}}</p>
+		{{/if}}
+	</div>
 	<div class="home-body">
 		<aside>
 			<div class="leaderboards">
-				<h3>Leaderboards</h3>
-				<div class="header">
-					<p>User</p>
-					<p>Points</p>
+				<div class="title-bar">
+					<h3>Leaderboards</h3>
+					<button type="button" class="toggle-btn">-</button>
 				</div>
-				{{#each leaders}}
-				<div class="leader-row">
-					<p>{{this.user}}</p>
-					<p>{{this.points}}</p>
+				<div class="table-container">
+					<div class="header">
+						<p>User</p>
+						<p>Points</p>
+					</div>
+					{{#each leaders}}
+					<div class="leader-row">
+						<p>{{this.user}}</p>
+						<p>{{this.points}}</p>
+					</div>
+					{{/each}}
 				</div>
-				{{/each}}
 			</div>
 		</aside>
 		<main>
-			<p>This is the home page. Users can see it without logging in.</p>
 			<div class="feed">
 				{{#each news}}
 				<article>
 					<h2><a href="/news/{{this.id}}">{{this.title}}</a></h2>
 					<p class="date">{{this.dateAdded}}</p>
-					<div><img src="images/{{this.photo}}"></img></div>
-
+					<img src="images/{{this.photo}}"></img>
 				</article>
 				{{/each}}
 			</div>

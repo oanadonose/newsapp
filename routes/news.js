@@ -29,7 +29,7 @@ helpers.comparison()
  * Article details page
  *
  * @name Article Page
- * @route {GET} /:newsid
+ * @route {GET} /news/:newsid
  */
 //(\\d+) regexp to enforce number type
 newsRouter.get('/:newsid(\\d+)', async ctx => {
@@ -59,6 +59,12 @@ newsRouter.get('/:newsid(\\d+)', async ctx => {
 	}
 })
 
+/**
+ * Route to release admin reviewed articles.
+ *
+ * @name Home Page
+ * @route {POST} /news/release/:newsid
+ */
 newsRouter.post('/release/:newsid(\\d+)', async(ctx, next) => {
 	const news = await new News(dbName)
 	const accounts = await new Accounts(dbName)
@@ -80,6 +86,12 @@ newsRouter.post('/release/:newsid(\\d+)', async(ctx, next) => {
 	}
 })
 
+/**
+ * Route to mark for revision admin reviewed articles.
+ *
+ * @name Home Page
+ * @route {POST} /news/revise/:newsid
+ */
 newsRouter.post('/revise/:newsid(\\d+)', async(ctx, next) => {
 	const news = await new News(dbName)
 	console.log('in revised route')
@@ -96,6 +108,12 @@ newsRouter.post('/revise/:newsid(\\d+)', async(ctx, next) => {
 	}
 })
 
+/**
+ * Render Add new article page.
+ *
+ * @name AddArticle Page
+ * @route {GET} /news/add
+ */
 newsRouter.get('/add', async ctx => {
 	try {
 		console.log(ctx.hbs)
@@ -107,6 +125,12 @@ newsRouter.get('/add', async ctx => {
 	}
 })
 
+/**
+ * Add new article script.
+ *
+ * @name AddNews Script
+ * @route {POST} /news/add
+ */
 newsRouter.post('/add', async ctx => {
 	const news = await new News(dbName)
 	const accounts = await new Accounts(dbName)
@@ -128,6 +152,12 @@ newsRouter.post('/add', async ctx => {
 	}
 })
 
+/**
+ * Edit news article page.
+ *
+ * @name Edit Page
+ * @route {GET} /news/add/:newsid
+ */
 newsRouter.get('/add/:newsid(\\d+)', async ctx => {
 	const news = await new News(dbName)
 	try {
@@ -140,6 +170,12 @@ newsRouter.get('/add/:newsid(\\d+)', async ctx => {
 	}
 })
 
+/**
+ * Edit news article script.
+ *
+ * @name Edit Script
+ * @route {POST} /news/add/:newsid
+ */
 newsRouter.post('/add/:newsid(\\d+)', async ctx => {
 	const news = await new News(dbName)
 	try {
@@ -161,6 +197,12 @@ newsRouter.post('/add/:newsid(\\d+)', async ctx => {
 	}
 })
 
+/**
+ * Pending articles page
+ *
+ * @name Pending Page
+ * @route {GET} /news/pending
+ */
 newsRouter.get('/pending', async ctx => {
 	const news = await new News(dbName)
 	try {
