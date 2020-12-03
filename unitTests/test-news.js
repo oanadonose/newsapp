@@ -106,14 +106,14 @@ test('EDIT ARTICLE: missing article body', async test => {
 })
 
 test('DELETE ARTICLE: successfully delete', async test => {
-  test.plan(1)
-  const news = await new News()
-  try {
-    const remove = await news.updateStatus('1', 'archived')
-    test.is(remove, true, 'unable to delete news')
-  } catch (err) {
-    test.is(err.message, 'test', 'incorrect error message')
-  } finally {
-    news.close()
-  }
+	test.plan(1)
+	const news = await new News()
+	try {
+		const remove = await news.updateStatus('1', 'archived')
+		test.is(remove, true, 'unable to delete news')
+	} catch (err) {
+		test.is(err.message, 'test', 'incorrect error message')
+	} finally {
+		news.close()
+	}
 })

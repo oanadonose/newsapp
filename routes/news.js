@@ -92,13 +92,11 @@ newsRouter.post('/release/:newsid(\\d+)', async(ctx, next) => {
  * @name Home Page
  * @route {POST} /news/delete/:newsid
  */
-newsRouter.post('/delete/:newsid(\\d+)', async(ctx, next) => {
+newsRouter.post('/delete/:newsid(\\d+)', async(ctx) => {
 	const news = await new News(dbName)
-	const accounts = await new Accounts(dbName)
 	try {
-		const article = await news.find(ctx.params.newsid)
 		await news.updateStatus(ctx.params.newsid, 'archived')
-		return ctx.redirect(`/?msg=article deleted`)
+		return ctx.redirect('/?msg=article deleted')
 	} catch (err) {
 		await ctx.render('error', ctx.hbs)
 	} finally {
