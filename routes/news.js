@@ -49,7 +49,6 @@ newsRouter.get('/:newsid(\\d+)', async ctx => {
 		//add article info to hbs
 		//add owner property in order to display edit button
 		ctx.hbs = { ...ctx.hbs, article, owner, feedbackItems }
-		console.log(ctx.hbs, 'ctx.hbs')
 		await ctx.render('article', ctx.hbs)
 	} catch (err) {
 		console.log('err', err)
@@ -115,7 +114,6 @@ newsRouter.post('/revise/:newsid(\\d+)', async(ctx, next) => {
 	console.log('in revised route')
 	try {
 		await news.updateStatus(ctx.params.newsid, 'pending')
-		console.log('ctx.hbs', ctx.hbs)
 		next()
 		return ctx.redirect(`/news/${ctx.params.newsid}?msg=article marked for revision`)
 	} catch (err) {
@@ -134,7 +132,6 @@ newsRouter.post('/revise/:newsid(\\d+)', async(ctx, next) => {
  */
 newsRouter.get('/add', async ctx => {
 	try {
-		console.log(ctx.hbs)
 		if (ctx.hbs.authorised !== true) return ctx.redirect('/login?msg=you need to log in&referrer=/news')
 		await ctx.render('add', ctx.hbs)
 	} catch (err) {
@@ -225,9 +222,7 @@ newsRouter.get('/pending', async ctx => {
 	const news = await new News(dbName)
 	try {
 		const pendingArticles = await news.all('pending')
-		console.log('ctx.hbs1', ctx.hbs)
 		ctx.hbs = { ...ctx.hbs, news: pendingArticles }
-		console.log('ctx.hbs2', ctx.hbs)
 		await ctx.render('pending', ctx.hbs)
 	} catch (err) {
 		await ctx.render('error', ctx.hbs)

@@ -68,7 +68,6 @@ class Accounts {
 		const record = await this.db.get(sql)
 		const valid = await bcrypt.compare(password, record.pass)
 		if (valid === false) throw new Error(`invalid password for account "${username}"`)
-		console.log('record', record)
 		return record
 	}
 
@@ -76,14 +75,12 @@ class Accounts {
 		const sql = `SELECT * FROM users where id=${id};`
 		const userDetails = await this.db.get(sql)
 		if (!userDetails) throw new Error(`no user found for id ${id}`)
-		console.log('userDetails', userDetails)
 		return userDetails
 	}
 
 	async addPoints(id, pointsToAdd) {
 		if (typeof pointsToAdd === 'number') {
 			const sql = `UPDATE users SET points=points+${pointsToAdd} WHERE id=${id};`
-			console.log(sql, 'sql add points')
 			await this.db.run(sql)
 		} else throw new Error('points must be integer')
 	}
