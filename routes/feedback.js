@@ -30,7 +30,19 @@ feedbackRouter.post('/:newsid(\\d+)', async ctx => {
 		await accounts.addPoints(articleUser, parseInt(ctx.request.body.rating))
 		return ctx.redirect(`/news/${ctx.params.newsid}`)
 	} catch (err) {
-		await ctx.render('error', ctx.hbs)
+		switch(err.message) {
+			case 'missing user id':
+				await ctx.redirect('/login?msg=you need to login to post feedback on articles')
+				break
+			case 'missing rating':
+				await ctx.redirect(`/news/${ctx.params.newsid}?msg=rating is required for feedback`)
+				break
+			case 'missing newsid':
+				await ctx.redirect('/?msg=cannot find news id')
+				break
+			default:
+				await ctx.render('Error', ctx.hbs)
+		}
 	}
 })
 

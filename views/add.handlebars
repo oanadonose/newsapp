@@ -35,6 +35,7 @@
 			</div>
 			{{#if article}}
 			<p><input type="submit" value="Edit" formaction="/news/add/{{article.id}}"></p>
+      <p><input type="submit" value="Delete" formaction="/news/delete/{{article.id}}"></p>
 			{{else}}
 			<p><input type="submit" value="Create" formaction="/news/add/"></p>
 			{{/if}}

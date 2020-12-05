@@ -87,6 +87,24 @@ newsRouter.post('/release/:newsid(\\d+)', async(ctx, next) => {
 })
 
 /**
+ * Route to delete articles.
+ *
+ * @name Home Page
+ * @route {POST} /news/delete/:newsid
+ */
+newsRouter.post('/delete/:newsid(\\d+)', async(ctx) => {
+	const news = await new News(dbName)
+	try {
+		await news.updateStatus(ctx.params.newsid, 'archived')
+		return ctx.redirect('/?msg=article deleted')
+	} catch (err) {
+		await ctx.render('error', ctx.hbs)
+	} finally {
+		news.close()
+	}
+})
+
+/**
  * Route to mark for revision admin reviewed articles.
  *
  * @name Home Page

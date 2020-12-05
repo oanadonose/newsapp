@@ -20,9 +20,7 @@ publicRouter.get('/', async ctx => {
 	const accounts = await new Accounts(dbName)
 	try {
 		const newsArticles = await news.all()
-		console.log('before leaders')
 		const leaders = await accounts.getUserLeaderboards()
-		console.log(leaders, 'leaders')
 		ctx.hbs = { ...ctx.hbs, news: newsArticles, leaders }
 		await ctx.render('index', ctx.hbs)
 	} catch (err) {
@@ -50,8 +48,6 @@ publicRouter.get('/register', async ctx => await ctx.render('register'))
 publicRouter.post('/register', async ctx => {
 	const account = await new Accounts(dbName)
 	try {
-		// call the functions in the module
-		console.log(ctx.request.body)
 		await account.register(ctx.request.body.user, ctx.request.body.pass,
 			ctx.request.body.email, ctx.request.body.subscribed || 'off')
 		ctx.redirect(`/login?msg=new user "${ctx.request.body.user}" added, you need to log in`)
