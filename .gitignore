@@ -29,3 +29,9 @@ config.json
 
 *.codio
 *.c9
+
+*.sh
+
+templates.md
+public/images/
+nodemon.json

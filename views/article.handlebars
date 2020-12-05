@@ -1,0 +1,123 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<title>Home Page</title>
+	<meta name="description" content="form to add new books">
+	<meta name="author" content="Mark Tyers">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="{{host}}/style.css" type="text/css" rel="stylesheet" />
+</head>
+
+<body>
+	<header>
+		<h1><a href="/">Local News</a></h1>
+		<div class="header-buttons">
+
+			{{#if authorised}}
+			<a href="/news/add">Add news</a>
+			<a href="/logout">Log out</a>
+			{{else}}
+			<a href="/login">Log in</a>
+			{{/if}}
+		</div>
+	</header>
+	{{#if msg}}
+	<p class="msg">{{msg}}</p>
+	{{/if}}
+	<main class="article-page">
+		{{#if admin}}
+		<aside>
+			<div>
+				{{#if (eq article.status "pending")}}
+				<form action="/news/release/{{article.id}}" method="POST">
+					<button type="submit" class="admin release">Mark as released</button>
+				</form>
+				{{/if}}
+				<form action="/news/revise/{{article.id}}" method="POST">
+					<button class="admin revision">Mark for revision</button>
+				</form>
+			</div>
+		</aside>
+		{{/if}}
+		{{#if owner}}
+		<button class="edit"><a href="/news/add/{{article.id}}">EDIT</a></button>
+		{{/if}}
+		<div class="article">
+			<h1>{{article.title}}</h1>
+			<div class="sub-heading">
+				<h4>by {{article.user}}</h4>
+				<h5>{{article.dateAdded}}</h5>
+			</div>
+			<img src="../images/{{article.photo}}"></img>
+			<div class="article-body">{{article.article}}</div>
+		</div>
+		<div class="feedback-add">
+			<form id="addfeedback" name="addfeedback" method="post" action="/feedback/{{article.id}}">
+				<p>Leave some feedback for this article:</p>
+				<select required form="addfeedback" name="rating" id="rating">
+					<option value="">Rating</option>
+					<option value="1">1 &#11088; </option>
+					<option value="2">2 &#11088; </option>
+					<option value="3">3 &#11088; </option>
+					<option value="4">4 &#11088; </option>
+					<option value="5">5 &#11088; </option>
+				</select>
+				<textarea required form="addfeedback" name="comment"></textarea>
+				<p><input type="submit" formaction="/feedback/{{article.id}}"></input></p>
+			</form>
+		</div>
+		<div class="feedback-feed">
+			{{#each feedbackItems}}
+			<div class="feedback-item">
+				<div class="header">
+					<h4>{{this.user}}</h4>
+					<h5>{{this.dateAdded}}</h5>
+				</div>
+				{{#if (eq this.rating 5)}}
+				<div>
+					<img src="../star.svg">
+					<img src="../star.svg">
+					<img src="../star.svg">
+					<img src="../star.svg">
+					<img src="../star.svg">
+				</div>
+				{{/if}}
+				{{#if (eq this.rating 4)}}
+				<div>
+					<img src="../star.svg">
+					<img src="../star.svg">
+					<img src="../star.svg">
+					<img src="../star.svg">
+				</div>
+				{{/if}}
+				{{#if (eq this.rating 3)}}
+				<div>
+					<img src="../star.svg">
+					<img src="../star.svg">
+					<img src="../star.svg">
+				</div>
+				{{/if}}
+				{{#if (eq this.rating 2)}}
+				<div>
+					<img src="../star.svg">
+					<img src="../star.svg">
+				</div>
+				{{/if}}
+				{{#if (eq this.rating 1)}}
+				<div>
+					<img src="../star.svg">
+				</div>
+				{{/if}}
+				<div class="comment">{{this.comment}}</div>
+				</divV>
+			</div>
+			{{/each}}
+		</div>
+
+	</main>
+</body>
+
+</html>

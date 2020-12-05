@@ -1,0 +1,42 @@
+
+<!doctype html>
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Home Page</title>
+		<meta name="description" content="form to add new books">
+		<meta name="author" content="Mark Tyers">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link href="{{host}}/style.css" type="text/css" rel="stylesheet" />
+	</head>
+	<body>
+		<header>
+			<h1><a href="/">Local News</a></h1>
+			<div class="header-buttons">
+				{{#if authorised}}
+					<a href="/news/add">Add news</a>
+					<a href="/logout">Log out</a>
+				{{else}}
+					<a href="/login">Log in</a>
+				{{/if}}
+			</div>
+		</header>
+		{{#if msg}}
+ 			<p class="msg">{{msg}}</p>
+		{{/if}}
+	<main>
+		<p>This is the home page. Users can see it without logging in.</p>
+		<div class="feed">
+			{{#each news}}
+				<article>
+					<h2><a href="/news/{{this.id}}">{{this.title}}</a></h2>
+					<p class="date">{{this.dateAdded}}</p>
+					<div><img src="../images/{{this.photo}}"></img></div>
+				</article>
+			{{/each}}
+		</div>
+		
+	</main>
+	</body>
+</html>

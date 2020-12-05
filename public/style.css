@@ -1,229 +1,289 @@
-
-body {
-		font-family: Arial, Helvetica, sans-serif;
-		margin: 0;
-	}
-
-/* formats the red message boxes */
-.msg {
-	border: 1px solid red;
-	font-weight: bold;
-	color: red;
-	padding: 1em;
-	margin: 2em;
-}
-
+@import url("https://fonts.googleapis.com/css2?family=PT+Serif&display=swap");
 header {
-	background-color: #ccc;
-	border-bottom: 5px solid grey;
-	height: 8vw;
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 1em;
+}
+header a {
+  text-decoration: none;
+  margin-right: 1em;
+}
+header h1 {
+  font-size: 1.4em;
 }
 
-h1, h2, h3 {
-	margin: 0;
-	padding: 0;
-	color: #444;
+.header-buttons {
+  display: flex;
+  flex-direction: row;
 }
 
-h1 {
-	padding: 2.6vw;
-	float: left;
-	font-size: 3vw;
-	margin-left: 6vw;
+.feed {
+  width: 100%;
+  background-color: peach;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+.feed article {
+  width: 25%;
+}
+.feed article img {
+  max-width: 300px;
+  max-height: 200px;
+  width: auto;
+  height: auto;
+}
+
+@media only screen and (max-width: 450px) {
+  article img {
+    max-width: 300px;
+  }
+}
+article {
+  max-width: 80%;
+  margin: 1em;
+  background-color: rgba(211, 211, 211, 0.4);
+  border-radius: 0.6em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1em;
+}
+article img {
+  max-width: 100%;
+  margin: 0.5em;
+}
+article .date {
+  font-size: 0.8em;
+  align-self: flex-end;
 }
 
 h2 {
-	font-size: 2.5vw;
-	margin: 1vw;
-	margin-left: 0.6vw;
+  font-size: 0.9rem;
+  margin: 0;
 }
 
-h3 {
-	font-size: 2vw;
-	margin: 1vw;
-	margin-left: 0.6vw;
+.edit {
+  padding: 0.7em;
+  width: 10em;
+  border-radius: 0.5em;
 }
 
-header > a {
-	margin-top: 3vw;
-	margin-right: 3vw;
-	float: right;
-	font-size: 1.3vw;
+.admin {
+  padding: 0.7em;
+  width: 10em;
+  border-radius: 0.5em;
 }
 
-header > img {
-	width: 7vw;
-	border-radius: 50%;
-	position: absolute;
-	left: 0.5vw;
-	top: 0.5vw;
+.release {
+  border-color: lightgreen;
+}
+.release:hover {
+  background-color: lightgreen;
 }
 
-p, legend {
-	font-size: 1.5vw;
+.revision {
+  border-color: lightcoral;
+}
+.revision:hover {
+  background-color: lightcoral;
 }
 
-main {
-	width: 100%;
-	margin-left: 3vw;
-	/* background-color: pink; */
-}
-
-article {
-	width: 50vw;
-	/* background-color: grey;
-	float: left; */
+@media screen and (min-width: 1000px) {
+  .home-body {
+    display: flex;
+    flex-direction: row;
+  }
 }
 
 aside {
-	/* background-color: yellow;
-	float: right; */
-	width: 50vw;
+  margin: 2em;
+  max-height: fit-content;
+}
+@media screen and (min-width: 1000px) {
+  aside {
+    width: 15%;
+  }
+}
+aside .leaderboards {
+  min-width: 170px;
+}
+aside .leaderboards .title-bar {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  justify-content: space-between;
+}
+aside .leaderboards .leader-row, aside .leaderboards .header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 0.5em;
+  border-bottom: 1px solid rgba(211, 211, 211, 0.4);
+  border-left: 1px solid rgba(211, 211, 211, 0.4);
+}
+aside .leaderboards .leader-row p, aside .leaderboards .header p {
+  padding: 0.5em;
+}
+aside .leaderboards .header {
+  border-radius: 1em 1em 0 0;
+  background-color: rgba(211, 211, 211, 0.4);
 }
 
-main a {
-	color: black;
-	text-decoration: underline;
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 2em;
 }
 
-main a:hover {
-	color: red;
-	text-decoration: none;
+form {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-section {
-	background-color: #DDD;
-	width: 24vw;
-	margin-top: 1vw;
-	padding: 1vw;
-	border-radius: 1vw;
+.input {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: fit-content;
+  margin: 1em;
 }
-
-section > p {
-	margin: 0;
-	padding: 0;
-	margin-bottom: 0.5vw;
-}
-
-section > h3 {
-	margin: 0;
-	padding: 0;
-	font-size: 1.8vw;
-}
-
-small {
-	display: block;
-	text-align: right;
-}
-
-/* ===== FORMS ===== */
-
-fieldset {
-	position: relative;
-	width: 25vw;
-	border: 1px solid #CCC;
-	padding-top: 4vw;
-}
-
-legend {
-	position:absolute;
-  top:0;
-	left:0;
-	width: 25.5vw;
-	background-color: #ccc;
-	border-bottom: 5px solid grey;
-	padding: 0.6vw;
-}
-
-input[type="file"] {
-	display: none;
-}
-
-input[type="submit"], header > a, .custom-file-upload {
-  background-color: grey;
-  border: 2px solid grey;
-  color: white;
-	padding: 0.4vw 0.8vw;
+.input input {
+  font-size: 1rem;
+  width: 15rem;
+  height: 4vh;
+  border-radius: 0.4rem;
   text-align: center;
-  text-decoration: none;
-  display: inline-block;
-	font-size: 1.5vw;
-	/* border-radius: 0.6vw; */
 }
 
-input[type="submit"]:hover, header > a:hover, .custom-file-upload:hover {
-  color: grey;
-  background-color: white;
-}
-
-input[type="text"], input[type="email"], input[type="password"], textarea, select {
-	font-size: 1.5vw;
-	width: 25vw;
-	border: 1px solid #CCC;
-	padding: 0.5vw;
-	/* margin-bottom: 1vw; */
-	/* border-radius: 0.6vw; */
+input[type=submit] {
+  width: 10rem;
+  height: 4vh;
+  border-radius: 0.4rem;
 }
 
 textarea {
-	height: 10vw;
-	resize: none;
+  border-radius: 0.6rem;
+  width: 15rem;
+  height: 10vh;
 }
 
-select {
-	width: 26.3vw;
-	-webkit-appearance: none;
-	-webkit-border-radius: 0px;
+.article {
+  border: 1px solid rgba(211, 211, 211, 0.4);
+  background-color: rgba(211, 211, 211, 0.1);
+  border-radius: 1em;
+  width: 80%;
+  padding: 2em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.article h1, .article h4, .article h5 {
+  margin: 0.5em;
+}
+.article img {
+  max-width: 90%;
+  max-height: 500px;
+  margin: 1em 0;
+}
+.article .sub-heading {
+  align-self: flex-end;
+}
+.article .article-body {
+  white-space: pre-wrap;
+  max-width: 85%;
+}
+@media only screen and (min-width: 1000px) {
+  .article .article-body {
+    max-width: 65%;
+  }
+  .article img {
+    max-width: 900px;
+  }
 }
 
-form > br {
-	line-height: 3vw;
+.feedback-add {
+  margin: 2em;
 }
 
-dl {
-  width: 35vw;
-  overflow: hidden;
-  /* background: #ff0; */
+.feedback-feed {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding: 1.5em;
+  background-color: rgba(211, 211, 211, 0.4);
+  border-radius: 1em;
+}
+@media screen and (min-width: 1000px) {
+  .feedback-feed {
+    width: 50%;
+  }
+}
+.feedback-feed .feedback-item {
+  width: 100%;
+}
+.feedback-feed .feedback-item .header {
+  display: flex;
+  justify-content: space-between;
+}
+.feedback-feed .comment {
+  margin: 1em 0;
+}
+
+/*
+html5doctor.com Reset Stylesheet
+v1.6.1
+Last Updated: 2010-09-17
+Author: Richard Clark - http://richclarkdesign.com
+Twitter: @rich_clark
+*/
+html, body {
+  font-size: 17px;
+  font-family: "PT Serif", serif;
+  vertical-align: baseline;
+  background: transparent;
+}
+
+body {
+  line-height: 1;
+}
+
+a {
+  margin: 0;
   padding: 0;
-	margin: 0;
-	font-size: 1.5vw;
-}
-dt {
-  float: left;
-  width: 10.5vw;
-  /* adjust the width; make sure the total of both is 100% */
-  /* background: #cc0; */
-  padding: 0.5vw;
-  margin: 0
-}
-dd {
-  float: left;
-  width: 21vw;
-  /* adjust the width; make sure the total of both is 100% */
-	/* background: #dd0; */
-	padding: 0.5vw;
-  margin: 0
+  background: transparent;
 }
 
-/* ===== TABLES ===== */
-
-table {
-	/* border: 1px solid grey; */
-	border-collapse: collapse;
+/* change colours to suit your needs */
+ins {
+  background-color: #ff9;
+  color: #000;
+  text-decoration: none;
 }
 
-tr:nth-child(odd) {
-	background: #DDD;
+/* change colours to suit your needs */
+mark {
+  background-color: #ff9;
+  color: #000;
+  font-style: italic;
+  font-weight: bold;
 }
 
-td {
-	/* border: 1px solid grey; */
-	padding: 0.5vw;
-	font-size: 1.5vw;
-	width: 25vw;
+del {
+  text-decoration: line-through;
 }
 
-td:last-child {
-	width: 10vw;
-	text-align: right;
+abbr[title], dfn[title] {
+  border-bottom: 1px dotted;
+  cursor: help;
 }
+
+/*# sourceMappingURL=style.css.map */

@@ -1,31 +1,70 @@
-
 <!doctype html>
 
 <html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<title>Home Page</title>
-		<meta name="description" content="form to add new books">
-		<meta name="author" content="Mark Tyers">
-		<link href="{{host}}/style.css" type="text/css" rel="stylesheet" />
-	</head>
-	<body>
-		<header>
-			<h1>Home</h1>
-			{{#if authorised}}
-				<a href="/logout">Log out</a>
-			{{else}}
-				<a href="/login">Log in</a>
+
+<head>
+	<meta charset="utf-8">
+	<title>Home Page</title>
+	<meta name="description" content="form to add new books">
+	<meta name="author" content="Mark Tyers">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="{{host}}/style.css" type="text/css" rel="stylesheet" />
+	<script type="module" src="main.js"></script>
+</head>
+
+<body>
+	<header>
+		<h1><a href="/">Local News</a></h1>
+		<div class="header-buttons">
+			{{#if admin}}
+			<a href="/news/pending">Pending</a>
 			{{/if}}
-		</header>
+			{{#if authorised}}
+			<a href="/news/add">Add news</a>
+			<a href="/logout">Log out</a>
+			{{else}}
+			<a href="/login">Log in</a>
+			{{/if}}
+		</div>
+	</header>
+	<div class="msg">
 		{{#if msg}}
- 			<p class="msg">{{msg}}</p>
+		<p>{{msg}}</p>
 		{{/if}}
-	<main>
-		<p>This is the home page. Users can see it without logging in.</p>
-		{{#if authorised}}
-			<p><a href="/secure">secure page</a></p>
-		{{/if}}
-	</main>
-	</body>
+	</div>
+	<div class="home-body">
+		<aside>
+			<div class="leaderboards">
+				<div class="title-bar">
+					<h3>Leaderboards</h3>
+					<button type="button" class="toggle-btn">-</button>
+				</div>
+				<div class="table-container">
+					<div class="header">
+						<p>User</p>
+						<p>Points</p>
+					</div>
+					{{#each leaders}}
+					<div class="leader-row">
+						<p>{{this.user}}</p>
+						<p>{{this.points}}</p>
+					</div>
+					{{/each}}
+				</div>
+			</div>
+		</aside>
+		<main>
+			<div class="feed">
+				{{#each news}}
+				<article>
+					<h2><a href="/news/{{this.id}}">{{this.title}}</a></h2>
+					<p class="date">{{this.dateAdded}}</p>
+					<img src="images/{{this.photo}}"></img>
+				</article>
+				{{/each}}
+			</div>
+		</main>
+	</div>
+</body>
+
 </html>
