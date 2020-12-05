@@ -54,7 +54,6 @@ publicRouter.post('/register', async ctx => {
 	} catch (err) {
 		ctx.hbs.msg = err.message
 		ctx.hbs.body = ctx.request.body
-		console.log(ctx.hbs)
 		await ctx.render('register', ctx.hbs)
 	} finally {
 		account.close()
@@ -99,7 +98,6 @@ publicRouter.get('/validate/:user/:token', async ctx => {
  * @route {GET} /login
  */
 publicRouter.get('/login', async ctx => {
-	console.log(ctx.hbs)
 	await ctx.render('login', ctx.hbs)
 })
 

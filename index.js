@@ -67,4 +67,4 @@ app.use(async(ctx, next) => {
 
 app.use(apiRouter.routes(), apiRouter.allowedMethods())
 
-app.listen(port, async() => console.log(`listening on port ${port}`))
+app.listen(port || 5000, async() => console.log(`listening on port ${port}`))

@@ -75,7 +75,6 @@ class News {
 	async updateStatus(newsid, status) {
 		try {
 			const sql = `UPDATE news SET status="${status}" WHERE id=${newsid};`
-			console.log('sql', sql)
 			await this.db.run(sql)
 			return true
 		} catch (err) {
