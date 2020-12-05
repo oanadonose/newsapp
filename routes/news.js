@@ -1,4 +1,3 @@
-
 import Router from 'koa-router'
 import News from '../modules/news.js'
 import Accounts from '../modules/accounts.js'
@@ -39,13 +38,10 @@ newsRouter.get('/:newsid(\\d+)', async ctx => {
 	try {
 		//get article info from db
 		const article = await news.find(ctx.params.newsid)
-
 		//create owner variable to check in hbs
 		const owner = article.userid === ctx.session.userid
-
 		//find article feedback
 		const feedbackItems = await feedback.getByNewsId(ctx.params.newsid)
-
 		//add article info to hbs
 		//add owner property in order to display edit button
 		ctx.hbs = { ...ctx.hbs, article, owner, feedbackItems }
