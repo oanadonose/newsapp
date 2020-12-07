@@ -19,36 +19,9 @@ const dbName = 'website.db'
 publicRouter.get('/', async ctx => {
 	try {
 		const newsArticles = await getAllNews()
-		//const newsArticles = await news.all()
 		//const leaders = await accounts.getUserLeaderboards()
 		ctx.hbs = { ...ctx.hbs, news: newsArticles}
-		console.log(ctx.hbs)
 		await ctx.render('index', ctx.hbs)
-	} catch (err) {
-		console.log(err)
-		await ctx.render('error', ctx.hbs)
-	}
-})
-
-
-publicRouter.get('/db', async ctx => {
-	try {
-		//       const userInfo = {
-		//         name: 'test',
-		//         password: ''
-		//       }
-		//       await register(userInfo)
-		//     const users = await remove(2)
-
-		//     ctx.hbs = {...ctx.hbs, users}
-		//     console.log(ctx.hbs, 'ctx.hbs')
-		//     const changes= {
-		//       title: 'testss222',
-		//       userid: 1
-		//     }
-		//     const res = await addNews(1, changes)
-		//     console.log(res,'res')
-		await ctx.render('index',ctx.hbs)
 	} catch (err) {
 		console.log(err)
 		await ctx.render('error', ctx.hbs)
@@ -90,37 +63,6 @@ publicRouter.post('/register', async ctx => {
 		await ctx.render('register', ctx.hbs)
 	}
 })
-// /**
-//  * The new user validation page.
-//  *
-//  * @name Postregister Page
-//  * @route {GET} /postregister
-//  */
-// publicRouter.get('/postregister', async ctx => await ctx.render('validate'))
-
-// /**
-//  * The script to validate new user registrations.
-//  *
-//  * @name Validate Script
-//  * @route {GET} /validate/:user/:token
-//  */
-// publicRouter.get('/validate/:user/:token', async ctx => {
-// 	try {
-// 		console.log('VALIDATE')
-// 		console.log(`URL --> ${ctx.request.url}`)
-// 		if (!ctx.request.url.includes('.css')) {
-// 			console.log(ctx.params)
-// 			const milliseconds = 1000
-// 			const now = Math.floor(Date.now() / milliseconds)
-// 			const account = await new Accounts(dbName)
-// 			await account.checkToken(ctx.params.user, ctx.params.token, now)
-// 			ctx.hbs.msg = `account "${ctx.params.user}" has been validated`
-// 			await ctx.render('login', ctx.hbs)
-// 		}
-// 	} catch (err) {
-// 		await ctx.render('login', ctx.hbs)
-// 	}
-// })
 
 /**
  * The login page.
@@ -141,20 +83,18 @@ publicRouter.get('/login', async ctx => {
 publicRouter.post('/login', async ctx => {
 	try {
 		const body = ctx.request.body
-		console.log({body})
 		const user = await findByName(body.user)
-
 		if(!user) {
 			return ctx.redirect('/login?msg=invalid user name')
 		} else {
 			const checkLogin = await login(body.user, body.pass)
-		}
-		ctx.session.authorised = true
-		ctx.session.user = body.user
-		ctx.session.userid = user.id
-		ctx.session.admin = user.admin
-		const referrer = body.referrer || '/'
-		return ctx.redirect(`${referrer}?msg=you are now logged in...`)
+      ctx.session.authorised = true
+      ctx.session.user = body.user
+      ctx.session.userid = user.id
+      ctx.session.admin = user.admin
+      const referrer = body.referrer || '/'
+      return ctx.redirect(`${referrer}?msg=you are now logged in...`)
+		}		
 	} catch (err) {
 		ctx.hbs.msg = err.message
 		await ctx.render('login', ctx.hbs)

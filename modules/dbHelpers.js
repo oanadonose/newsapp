@@ -47,6 +47,7 @@ export const update = async(id, changes) =>
 		.update(changes, [id])
 
 
+
 export const findNewsById = (id) => db('news')
 	.where({ id })
 	.first()

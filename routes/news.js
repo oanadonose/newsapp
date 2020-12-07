@@ -5,6 +5,9 @@ import Feedback from '../modules/feedback.js'
 import helpers from 'handlebars-helpers'
 import nodemailer from 'nodemailer'
 import { generateMailOpts } from '../helpers/mail.js'
+import { addNews } from '../modules/dbHelpers.js'
+import mime from 'mime-types'
+import fs from 'fs-extra'
 
 const transporter = nodemailer.createTransport({
 	service: 'gmail',
@@ -143,23 +146,36 @@ newsRouter.get('/add', async ctx => {
  * @route {POST} /news/add
  */
 newsRouter.post('/add', async ctx => {
-	const news = await new News(dbName)
-	const accounts = await new Accounts(dbName)
+  let filename
 	try {
 		ctx.request.body.account = ctx.session.userid
 		if (ctx.request.files.photo.name) {
 			ctx.request.body.filePath = ctx.request.files.photo.path
 			ctx.request.body.fileName = ctx.request.files.photo.name
 			ctx.request.body.fileType = ctx.request.files.photo.type
-		}
-		await news.add(ctx.request.body)
-		await accounts.addPoints(ctx.session.userid, articleAddedPts) //10
+      filename = `${Date.now()}.${mime.extension(ctx.request.files.photo.type)}`
+      await fs.copy(ctx.request.files.photo.path, `public/images/${filename}`)
+		} else {
+      filename = 'image_2.jpg'
+    }
+    console.log('body',ctx.request.body)
+    console.log('filename', filename)
+    
+    const newsInfo = {
+      title: ctx.request.body.title,
+      userid: ctx.request.body.account,
+      article: ctx.request.body.article,
+      photo: filename
+    }
+    
+    const newNews = await addNews(newsInfo.userid, newsInfo)
+    
+		//await news.add(ctx.request.body)
+		//await accounts.addPoints(ctx.session.userid, articleAddedPts) //10
 		return ctx.redirect('/?msg=new article added')
 	} catch (err) {
 		ctx.hbs.msg = err.message
 		await ctx.render('index', ctx.hbs)
-	} finally {
-		news.close()
 	}
 })
 
