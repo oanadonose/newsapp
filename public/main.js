@@ -18,4 +18,3 @@ const toggleLeaderboards = () => {
 const toggleBtn = document.querySelector('.toggle-btn')
 toggleBtn.addEventListener('click', toggleLeaderboards)
 
-

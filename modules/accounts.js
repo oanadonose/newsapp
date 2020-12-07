@@ -29,14 +29,14 @@ class Accounts {
 		Array.from(arguments).forEach(val => {
 			if (val.length === 0) throw new Error('missing field')
 		})
-		let sql = `SELECT COUNT(id) as records FROM users WHERE user="${user}";`
+		let sql = `SELECT COUNT(id) as records FROM users WHERE name="${user}";`
 		const data = await this.db.get(sql)
 		if (data.records !== 0) throw new Error(`username "${user}" already in use`)
 		sql = `SELECT COUNT(id) as records FROM users WHERE email="${email}";`
 		const emails = await this.db.get(sql)
 		if (emails.records !== 0) throw new Error(`email address "${email}" is already in use`)
 		pass = await bcrypt.hash(pass, saltRounds)
-		sql = `INSERT INTO users(user, pass, email, subscribed) 
+		sql = `INSERT INTO users(name, password, email, subscribed) 
       VALUES("${user}", "${pass}", "${email}", ${subscribed === 'on' ? '1' : '0'});`
 		await this.db.run(sql)
 		return true
@@ -61,10 +61,10 @@ class Accounts {
 	 * @returns {Boolean} returns true if credentials are valid
 	 */
 	async login(username, password) {
-		let sql = `SELECT count(id) AS count FROM users WHERE user="${username}";`
+		let sql = `SELECT count(id) AS count FROM users WHERE name="${username}";`
 		const records = await this.db.get(sql)
 		if (!records.count) throw new Error(`username "${username}" not found`)
-		sql = `SELECT * FROM users WHERE user = "${username}";`
+		sql = `SELECT * FROM users WHERE name = "${username}";`
 		const record = await this.db.get(sql)
 		const valid = await bcrypt.compare(password, record.pass)
 		if (valid === false) throw new Error(`invalid password for account "${username}"`)

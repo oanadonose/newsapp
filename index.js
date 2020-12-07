@@ -13,6 +13,15 @@ import News from './modules/news.js'
 import cron from 'node-cron'
 import { subscriptionMailOpts } from './helpers/mail.js'
 
+
+
+// const pool = new Pool({
+//   connectionString: process.env.DATABASE_URL,
+//   ssl: {
+//     rejectUnauthorized: false
+//   }
+// });
+
 const dbName = 'website.db'
 
 const transporter = nodemailer.createTransport({
