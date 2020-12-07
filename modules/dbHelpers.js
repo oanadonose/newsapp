@@ -13,8 +13,7 @@ export const register = async(user) => {
 	if(!user.password || !user.name || !user.email) return 0
 	const pass = await bcrypt.hash(user.password, saltRounds)
 	user.password = pass
-	const [id] = await db('users').insert(user)
-	return id
+	return await db('users').insert(user, ['id', 'name'])
 }
 
 export const login = async(name, password) => {
