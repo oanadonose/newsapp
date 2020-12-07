@@ -88,13 +88,13 @@ publicRouter.post('/login', async ctx => {
 			return ctx.redirect('/login?msg=invalid user name')
 		} else {
 			const checkLogin = await login(body.user, body.pass)
-      ctx.session.authorised = true
-      ctx.session.user = body.user
-      ctx.session.userid = user.id
-      ctx.session.admin = user.admin
-      const referrer = body.referrer || '/'
-      return ctx.redirect(`${referrer}?msg=you are now logged in...`)
-		}		
+			ctx.session.authorised = true
+			ctx.session.user = body.user
+			ctx.session.userid = user.id
+			ctx.session.admin = user.admin
+			const referrer = body.referrer || '/'
+			return ctx.redirect(`${referrer}?msg=you are now logged in...`)
+		}
 	} catch (err) {
 		ctx.hbs.msg = err.message
 		await ctx.render('login', ctx.hbs)

@@ -47,16 +47,13 @@ export const update = async(id, changes) =>
 		.update(changes, [id])
 
 
-
 export const findNewsById = (id) => db('news')
 	.where({ id })
 	.first()
 
-export const addNews = async(userid, news) => {
-	const [id] = await db('news')
-		.where({ userid })
-		.insert(news)
-	return findNewsById(id)
-}
+export const addNews = async(userid, news) => await db('news')
+	.where({ userid })
+	.insert(news, ['id','title','userid'])
+
 
 export const getAllNews = async() => db('news')
