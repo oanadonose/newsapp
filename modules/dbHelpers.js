@@ -9,69 +9,54 @@ const saltRounds = 10
 
 //remove asyncs? 11
 
-export const register = async (user) => {
-  if(!user.password || !user.name || !user.email) return 0
-  const pass = await bcrypt.hash(user.password, saltRounds)
-  user.password = pass
-  const [id] = await db('users').insert(user)
-  return id
+export const register = async(user) => {
+	if(!user.password || !user.name || !user.email) return 0
+	const pass = await bcrypt.hash(user.password, saltRounds)
+	user.password = pass
+	const [id] = await db('users').insert(user)
+	return id
 }
 
-export const login = async (name, password) => {
-  const user = await findByName(name)
-  console.log('user',user)
-  const valid = await bcrypt.compare(password, user.password)
+export const login = async(name, password) => {
+	const user = await findByName(name)
+	console.log('user',user)
+	const valid = await bcrypt.compare(password, user.password)
 	if (valid === false) throw new Error(`invalid password for account "${name}"`)
-  return db('users')
-    .where({ name, password })
-    .first()
+	return db('users')
+		.where({ name, password })
+		.first()
 }
 
-export const find = async () => {
-  return db('users')
+export const find = async() => db('users')
+
+export const findById = async(id) => db('users')
+	.where({ id })
+	.first()
+
+export const findByName = async(name) => db('users')
+	.where({ name })
+	.first()
+
+
+export const remove = async(id) => db('users')
+	.where({ id })
+	.del()
+
+export const update = async(id, changes) =>
+	db('users')
+		.where({ id })
+		.update(changes, [id])
+
+
+export const findNewsById = (id) => db('news')
+	.where({ id })
+	.first()
+
+export const addNews = async(userid, news) => {
+	const [id] = await db('news')
+		.where({ userid })
+		.insert(news)
+	return findNewsById(id)
 }
 
-export const findById = async (id) => {
-  return db('users')
-    .where({ id })
-    .first()
-}
-
-export const findByName = async (name) => {
-  return db('users')
-    .where({ name })
-    .first()
-}
-
-
-
-export const remove = async (id) => {
-  return db('users')
-    .where({ id })
-    .del()
-}
-
-export const update = async (id, changes) => {
-  return (
-    db('users')
-    .where({ id })
-    .update(changes, [id])
-  )
-}
-
-export const findNewsById = (id) => {
-  return db('news')
-    .where({ id })
-    .first()
-}
-
-export const addNews = async (userid, news) => {
-  const [id] = await db('news')
-    .where({ userid })
-    .insert(news)
-  return findNewsById(id);
-}
-
-export const getAllNews = async () => {
-  return db('news')
-}
+export const getAllNews = async() => db('news')

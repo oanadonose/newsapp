@@ -18,41 +18,41 @@ const dbName = 'website.db'
  */
 publicRouter.get('/', async ctx => {
 	try {
-    const newsArticles = await getAllNews()
+		const newsArticles = await getAllNews()
 		//const newsArticles = await news.all()
 		//const leaders = await accounts.getUserLeaderboards()
 		ctx.hbs = { ...ctx.hbs, news: newsArticles}
-    console.log(ctx.hbs)
+		console.log(ctx.hbs)
 		await ctx.render('index', ctx.hbs)
 	} catch (err) {
-    console.log(err)
+		console.log(err)
 		await ctx.render('error', ctx.hbs)
 	}
 })
 
 
 publicRouter.get('/db', async ctx => {
-  try {
-//       const userInfo = {
-//         name: 'test',
-//         password: ''
-//       } 
-//       await register(userInfo)
-//     const users = await remove(2)
-    
-//     ctx.hbs = {...ctx.hbs, users}
-//     console.log(ctx.hbs, 'ctx.hbs')
-//     const changes= {
-//       title: 'testss222',
-//       userid: 1
-//     }
-//     const res = await addNews(1, changes)
-//     console.log(res,'res')
-    await ctx.render('index',ctx.hbs)
-  } catch (err) {
-    console.log(err)
-    await ctx.render('error', ctx.hbs)
-  }
+	try {
+		//       const userInfo = {
+		//         name: 'test',
+		//         password: ''
+		//       }
+		//       await register(userInfo)
+		//     const users = await remove(2)
+
+		//     ctx.hbs = {...ctx.hbs, users}
+		//     console.log(ctx.hbs, 'ctx.hbs')
+		//     const changes= {
+		//       title: 'testss222',
+		//       userid: 1
+		//     }
+		//     const res = await addNews(1, changes)
+		//     console.log(res,'res')
+		await ctx.render('index',ctx.hbs)
+	} catch (err) {
+		console.log(err)
+		await ctx.render('error', ctx.hbs)
+	}
 })
 
 
@@ -72,19 +72,18 @@ publicRouter.get('/register', async ctx => await ctx.render('register'))
  */
 publicRouter.post('/register', async ctx => {
 	try {
-    const userInfo = {
-      name: ctx.request.body.user,
-      password: ctx.request.body.pass,
-      email: ctx.request.body.email,
-      subscribed: ctx.request.body.subscribed=='on' ? 1:0
-    }
+		const userInfo = {
+			name: ctx.request.body.user,
+			password: ctx.request.body.pass,
+			email: ctx.request.body.email,
+			subscribed: ctx.request.body.subscribed==='on' ? 1:0
+		}
 		const res = await register(userInfo)
-    if(res==0) {
-      ctx.redirect(`/login?msg=missing field error`)
-    }
-		else {
-      ctx.redirect(`/login?msg=new user "${ctx.request.body.user}" added, you need to log in`)
-    }
+		if(res===0) {
+			ctx.redirect('/login?msg=missing field error')
+		} else {
+			ctx.redirect(`/login?msg=new user "${ctx.request.body.user}" added, you need to log in`)
+		}
 	} catch (err) {
 		ctx.hbs.msg = err.message
 		ctx.hbs.body = ctx.request.body
@@ -142,15 +141,14 @@ publicRouter.get('/login', async ctx => {
 publicRouter.post('/login', async ctx => {
 	try {
 		const body = ctx.request.body
-    console.log({body})
+		console.log({body})
 		const user = await findByName(body.user)
 
-    if(!user) {
-      return ctx.redirect(`/login?msg=invalid user name`)
-    }
-    else {
-      const checkLogin = await login(body.user, body.pass)
-    }
+		if(!user) {
+			return ctx.redirect('/login?msg=invalid user name')
+		} else {
+			const checkLogin = await login(body.user, body.pass)
+		}
 		ctx.session.authorised = true
 		ctx.session.user = body.user
 		ctx.session.userid = user.id

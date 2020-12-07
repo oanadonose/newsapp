@@ -14,7 +14,6 @@ import cron from 'node-cron'
 import { subscriptionMailOpts } from './helpers/mail.js'
 
 
-
 // const pool = new Pool({
 //   connectionString: process.env.DATABASE_URL,
 //   ssl: {
