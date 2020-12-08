@@ -1,11 +1,8 @@
 import Router from 'koa-router'
-import News from '../modules/news.js'
-import Accounts from '../modules/accounts.js'
-import Feedback from '../modules/feedback.js'
 import helpers from 'handlebars-helpers'
 import nodemailer from 'nodemailer'
 import { generateMailOpts } from '../helpers/mail.js'
-import { addNews } from '../modules/dbHelpers.js'
+import { addNews, findNewsById, findNewsByStatus, findUserById, editNews, editUser } from '../modules/dbHelpers.js'
 import mime from 'mime-types'
 import fs from 'fs-extra'
 
@@ -18,8 +15,6 @@ const transporter = nodemailer.createTransport({
 })
 
 const newsRouter = new Router({ prefix: '/news' })
-
-const dbName = 'website.db'
 
 const articleAddedPts = 10
 const articleReleasedPts = 15
@@ -35,25 +30,24 @@ helpers.comparison()
  */
 //(\\d+) regexp to enforce number type
 newsRouter.get('/:newsid(\\d+)', async ctx => {
-
-	const news = await new News(dbName)
-	const feedback = await new Feedback(dbName)
 	try {
-		//get article info from db
-		const article = await news.find(ctx.params.newsid)
+		let article = await findNewsById(ctx.params.newsid)
+		const articleOwner = await findUserById(article.userid)
+		article = { ... article, user: articleOwner.name }
+
 		//create owner variable to check in hbs
 		const owner = article.userid === ctx.session.userid
 		//find article feedback
-		const feedbackItems = await feedback.getByNewsId(ctx.params.newsid)
+		//const feedbackItems = await feedback.getByNewsId(ctx.params.newsid)
+		//
 		//add article info to hbs
 		//add owner property in order to display edit button
-		ctx.hbs = { ...ctx.hbs, article, owner, feedbackItems }
+		ctx.hbs = { ...ctx.hbs, article, owner}
 		await ctx.render('article', ctx.hbs)
 	} catch (err) {
+		ctx.hbs.msg = err.message
 		console.log('err', err)
 		await ctx.render('error', ctx.hbs)
-	} finally {
-		news.close()
 	}
 })
 
@@ -64,12 +58,14 @@ newsRouter.get('/:newsid(\\d+)', async ctx => {
  * @route {POST} /news/release/:newsid
  */
 newsRouter.post('/release/:newsid(\\d+)', async(ctx, next) => {
-	const news = await new News(dbName)
-	const accounts = await new Accounts(dbName)
 	try {
-		const article = await news.find(ctx.params.newsid)
-		await news.updateStatus(ctx.params.newsid, 'released')
-		await accounts.addPoints(article.userid, articleReleasedPts) //15
+		let article = await findNewsById(ctx.params.newsid)
+		const changes = { status: 'released' }
+		await editNews(ctx.params.newsid, changes)
+		const user = await findUserById(article.userid)
+		const userUpdates = {	points: user.points + articleReleasedPts }
+		await editUser(article.userid, userUpdates)
+		article = { ...article, email: user.email }
 		const mailOpts = generateMailOpts(article, ctx.params.newsid)
 		transporter.sendMail(mailOpts, (err, res) => {
 			if (err) console.log('err', err)
@@ -78,27 +74,9 @@ newsRouter.post('/release/:newsid(\\d+)', async(ctx, next) => {
 		next()
 		return ctx.redirect(`/news/${ctx.params.newsid}?msg=article released`)
 	} catch (err) {
+		ctx.hbs.msg = err.message
+		ctx.hbs.body = ctx.request.body
 		await ctx.render('error', ctx.hbs)
-	} finally {
-		news.close()
-	}
-})
-
-/**
- * Route to delete articles.
- *
- * @name Home Page
- * @route {POST} /news/delete/:newsid
- */
-newsRouter.post('/delete/:newsid(\\d+)', async(ctx) => {
-	const news = await new News(dbName)
-	try {
-		await news.updateStatus(ctx.params.newsid, 'archived')
-		return ctx.redirect('/?msg=article deleted')
-	} catch (err) {
-		await ctx.render('error', ctx.hbs)
-	} finally {
-		news.close()
 	}
 })
 
@@ -108,20 +86,40 @@ newsRouter.post('/delete/:newsid(\\d+)', async(ctx) => {
  * @name Home Page
  * @route {POST} /news/revise/:newsid
  */
-newsRouter.post('/revise/:newsid(\\d+)', async(ctx, next) => {
-	const news = await new News(dbName)
-	console.log('in revised route')
+newsRouter.post('/revise/:newsid(\\d+)', async(ctx) => {
 	try {
-		await news.updateStatus(ctx.params.newsid, 'pending')
-		next()
+		const changes = {
+			status: 'revision'
+		}
+		await editNews(ctx.params.newsid, changes)
 		return ctx.redirect(`/news/${ctx.params.newsid}?msg=article marked for revision`)
 	} catch (err) {
-		console.log('err', err)
+		ctx.hbs.msg = err.message
 		await ctx.render('error', ctx.hbs)
-	} finally {
-		news.close()
 	}
 })
+
+
+/**
+ * Route to delete articles.
+ *
+ * @name Home Page
+ * @route {POST} /news/delete/:newsid
+ */
+newsRouter.post('/delete/:newsid(\\d+)', async(ctx) => {
+	try {
+		const changes = {
+			status: 'archived'
+		}
+		await editNews(ctx.params.newsid, changes)
+		return ctx.redirect(`/news/${ctx.params.newsid}?msg=article archived`)
+	} catch (err) {
+		console.log('err', err)
+		ctx.hbs.msg = err.message
+		await ctx.render('error', ctx.hbs)
+	}
+})
+
 
 /**
  * Render Add new article page.
@@ -146,7 +144,7 @@ newsRouter.get('/add', async ctx => {
  * @route {POST} /news/add
  */
 newsRouter.post('/add', async ctx => {
-	let filename
+	let filename='image_2.jpg'
 	try {
 		ctx.request.body.account = ctx.session.userid
 		if (ctx.request.files.photo.name) {
@@ -155,23 +153,20 @@ newsRouter.post('/add', async ctx => {
 			ctx.request.body.fileType = ctx.request.files.photo.type
 			filename = `${Date.now()}.${mime.extension(ctx.request.files.photo.type)}`
 			await fs.copy(ctx.request.files.photo.path, `public/images/${filename}`)
-		} else {
-			filename = 'image_2.jpg'
 		}
-		console.log('body',ctx.request.body)
-		console.log('filename', filename)
-
 		const newsInfo = {
 			title: ctx.request.body.title,
 			userid: ctx.request.body.account,
 			article: ctx.request.body.article,
 			photo: filename
 		}
-
-		const newNews = await addNews(newsInfo.userid, newsInfo)
-
-		//await news.add(ctx.request.body)
-		//await accounts.addPoints(ctx.session.userid, articleAddedPts) //10
+		await addNews(newsInfo.userid, newsInfo)
+		const user = await findUserById(newsInfo.userid)
+		const userPoints = user.points
+		const userUpdates = {
+			points: userPoints + articleAddedPts
+		}
+		await editUser(newsInfo.userid, userUpdates)
 		return ctx.redirect('/?msg=new article added')
 	} catch (err) {
 		ctx.hbs.msg = err.message
@@ -186,9 +181,8 @@ newsRouter.post('/add', async ctx => {
  * @route {GET} /news/add/:newsid
  */
 newsRouter.get('/add/:newsid(\\d+)', async ctx => {
-	const news = await new News(dbName)
 	try {
-		const article = await news.find(ctx.params.newsid)
+		const article = await findNewsById(ctx.params.newsid)
 		ctx.hbs = { ...ctx.hbs, article }
 		await ctx.render('add', ctx.hbs)
 	} catch (err) {
@@ -204,23 +198,29 @@ newsRouter.get('/add/:newsid(\\d+)', async ctx => {
  * @route {POST} /news/add/:newsid
  */
 newsRouter.post('/add/:newsid(\\d+)', async ctx => {
-	const news = await new News(dbName)
+	let filename
 	try {
+		ctx.request.body.account = ctx.session.userid
 		if (ctx.request.files.photo.name) {
 			ctx.request.body.filePath = ctx.request.files.photo.path
 			ctx.request.body.fileName = ctx.request.files.photo.name
 			ctx.request.body.fileType = ctx.request.files.photo.type
+			filename = `${Date.now()}.${mime.extension(ctx.request.files.photo.type)}`
+			await fs.copy(ctx.request.files.photo.path, `public/images/${filename}`)
 		}
-		ctx.request.body.newsid = ctx.params.newsid
-		await news.edit(ctx.request.body)
+		let changes = {
+			title: ctx.request.body.title,
+			article: ctx.request.body.article,
+		}
+		if(filename) {
+			changes = {...changes, photo: filename}
+		}
+		await editNews(ctx.params.newsid, changes)
 		return ctx.redirect('/?msg=article edited successfully')
 	} catch (err) {
-		console.log('err', err)
 		ctx.hbs.msg = err.message
 		ctx.hbs.body = ctx.request.body
 		await ctx.render('error', ctx.hbs)
-	} finally {
-		news.close()
 	}
 })
 
@@ -231,15 +231,28 @@ newsRouter.post('/add/:newsid(\\d+)', async ctx => {
  * @route {GET} /news/pending
  */
 newsRouter.get('/pending', async ctx => {
-	const news = await new News(dbName)
 	try {
-		const pendingArticles = await news.all('pending')
+		const pendingArticles = await findNewsByStatus('pending')
 		ctx.hbs = { ...ctx.hbs, news: pendingArticles }
 		await ctx.render('pending', ctx.hbs)
 	} catch (err) {
 		await ctx.render('error', ctx.hbs)
-	} finally {
-		news.close()
+	}
+})
+
+/**
+ * Pending articles page
+ *
+ * @name Pending Page
+ * @route {GET} /news/pending
+ */
+newsRouter.get('/revision', async ctx => {
+	try {
+		const pendingArticles = await findNewsByStatus('revision')
+		ctx.hbs = { ...ctx.hbs, news: pendingArticles }
+		await ctx.render('pending', ctx.hbs)
+	} catch (err) {
+		await ctx.render('error', ctx.hbs)
 	}
 })
 

@@ -1,14 +1,11 @@
 
 import Router from 'koa-router'
 import bodyParser from 'koa-body'
-import { register, find, findById, remove, update, addNews, getAllNews, findByName, login } from '../modules/dbHelpers.js'
+import { register, findUsers, findNewsByStatus, findByName, login } from '../modules/dbHelpers.js'
 
 const publicRouter = new Router()
 publicRouter.use(bodyParser({ multipart: true }))
 
-import Accounts from '../modules/accounts.js'
-import News from '../modules/news.js'
-const dbName = 'website.db'
 
 /**
  * The secure home page.
@@ -18,9 +15,10 @@ const dbName = 'website.db'
  */
 publicRouter.get('/', async ctx => {
 	try {
-		const newsArticles = await getAllNews()
-		//const leaders = await accounts.getUserLeaderboards()
-		ctx.hbs = { ...ctx.hbs, news: newsArticles}
+		const newsArticles = await findNewsByStatus('released')
+		const leaders = await findUsers()
+		console.log('leaders',leaders)
+		ctx.hbs = { ...ctx.hbs, news: newsArticles, leaders}
 		await ctx.render('index', ctx.hbs)
 	} catch (err) {
 		console.log(err)
@@ -87,7 +85,7 @@ publicRouter.post('/login', async ctx => {
 		if(!user) {
 			return ctx.redirect('/login?msg=invalid user name')
 		} else {
-			const checkLogin = await login(body.user, body.pass)
+			await login(body.user, body.pass)
 			ctx.session.authorised = true
 			ctx.session.user = body.user
 			ctx.session.userid = user.id

@@ -17,13 +17,14 @@
 		<h1><a href="/">Local News</a></h1>
 		<div class="header-buttons">
 			{{#if admin}}
-			<a href="/news/pending">Pending</a>
+        <a href="/news/pending">Pending</a>
+        <a href="/news/revision">Revision</a>
 			{{/if}}
 			{{#if authorised}}
-			<a href="/news/add">Add news</a>
-			<a href="/logout">Log out</a>
+        <a href="/news/add">Add news</a>
+        <a href="/logout">Log out</a>
 			{{else}}
-			<a href="/login">Log in</a>
+        <a href="/login">Log in</a>
 			{{/if}}
 		</div>
 	</header>
@@ -46,7 +47,7 @@
 					</div>
 					{{#each leaders}}
 					<div class="leader-row">
-						<p>{{this.user}}</p>
+						<p>{{this.name}}</p>
 						<p>{{this.points}}</p>
 					</div>
 					{{/each}}

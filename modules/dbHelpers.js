@@ -26,9 +26,10 @@ export const login = async(name, password) => {
 		.first()
 }
 
-export const find = async() => db('users')
+export const findUsers = async() => db('users')
+	.orderBy('points', 'desc')
 
-export const findById = async(id) => db('users')
+export const findUserById = async(id) => db('users')
 	.where({ id })
 	.first()
 
@@ -41,19 +42,30 @@ export const remove = async(id) => db('users')
 	.where({ id })
 	.del()
 
-export const update = async(id, changes) =>
-	db('users')
+export const editUser = async(id, changes) => {
+	await db('users')
 		.where({ id })
-		.update(changes, [id])
+		.update(changes)
+	return findUserById(id)
+}
 
 
 export const findNewsById = (id) => db('news')
 	.where({ id })
 	.first()
 
+export const findNewsByStatus = (status) => db('news')
+	.where({ status })
+
 export const addNews = async(userid, news) => await db('news')
 	.where({ userid })
 	.insert(news, ['id','title','userid'])
 
+export const editNews = async(id, changes) => db('news')
+	.where({ id })
+	.update(changes, [id])
+
+export const findUserNews = (userid) => db('news')
+	.where({ userid })
 
 export const getAllNews = async() => db('news')
