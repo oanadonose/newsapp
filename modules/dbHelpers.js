@@ -18,7 +18,6 @@ export const register = async(user) => {
 
 export const login = async(name, password) => {
 	const user = await findByName(name)
-	console.log('user',user)
 	const valid = await bcrypt.compare(password, user.password)
 	if (valid === false) throw new Error(`invalid password for account "${name}"`)
 	return db('users')
@@ -61,9 +60,12 @@ export const addNews = async(userid, news) => await db('news')
 	.where({ userid })
 	.insert(news, ['id','title','userid'])
 
-export const editNews = async(id, changes) => db('news')
-	.where({ id })
-	.update(changes, [id])
+export const editNews = async(id, changes) => {
+  await db('news')
+    .where({ id })
+    .update(changes)
+  return findNewsById(id) 
+}
 
 export const findUserNews = (userid) => db('news')
 	.where({ userid })
