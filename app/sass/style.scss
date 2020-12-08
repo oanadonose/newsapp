@@ -39,7 +39,6 @@ header {
   flex-wrap: wrap;
   justify-content: space-around;
   article {
-	  width: 25%;
 	  img {
 		max-width:300px;
 		max-height:200px;
@@ -239,7 +238,26 @@ textarea {
 		.header {
 			display: flex;
 			justify-content: space-between;
+      align-items: flex-end;
+      
+      h4, h5 {
+        margin: 0;
+      }
 		}
+    .content {
+      display: flex;
+      flex-direction: row-reverse;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 0.5em;
+      
+      .rating {
+        margin-left: 1em;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+      }
+    }
 	}
 	.comment {
 		margin: 1em 0;

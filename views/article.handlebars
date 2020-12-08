@@ -78,45 +78,39 @@
 					<h4>{{this.name}}</h4>
 					<h5>{{format this.updated_at}}</h5>
 				</div>
-				{{#if (eq this.rating 5)}}
-				<div>
-					<img src="../star.svg">
-					<img src="../star.svg">
-					<img src="../star.svg">
-					<img src="../star.svg">
-					<img src="../star.svg">
-				</div>
-				{{/if}}
-				{{#if (eq this.rating 4)}}
-				<div>
-					<img src="../star.svg">
-					<img src="../star.svg">
-					<img src="../star.svg">
-					<img src="../star.svg">
-				</div>
-				{{/if}}
-				{{#if (eq this.rating 3)}}
-				<div>
-					<img src="../star.svg">
-					<img src="../star.svg">
-					<img src="../star.svg">
-				</div>
-				{{/if}}
-				{{#if (eq this.rating 2)}}
-				<div>
-					<img src="../star.svg">
-					<img src="../star.svg">
-				</div>
-				{{/if}}
-				{{#if (eq this.rating 1)}}
-				<div>
-					<img src="../star.svg">
-				</div>
-				{{/if}}
-				<div class="comment">{{this.comment}}</div>
-				</divV>
-			</div>
-			{{/each}}
+        <div class="content">
+          <div class="rating">
+            {{#if (eq this.rating 5)}}
+              <img src="../star.svg">
+              <img src="../star.svg">
+              <img src="../star.svg">
+              <img src="../star.svg">
+              <img src="../star.svg">
+            {{/if}}
+            {{#if (eq this.rating 4)}}
+              <img src="../star.svg">
+              <img src="../star.svg">
+              <img src="../star.svg">
+              <img src="../star.svg">
+            {{/if}}
+            {{#if (eq this.rating 3)}}
+              <img src="../star.svg">
+              <img src="../star.svg">
+              <img src="../star.svg">
+            {{/if}}
+            {{#if (eq this.rating 2)}}
+              <img src="../star.svg">
+              <img src="../star.svg">
+            {{/if}}
+            {{#if (eq this.rating 1)}}
+              <img src="../star.svg">
+            {{/if}}
+          </div>
+          <div class="comment">{{this.comment}}</div>
+          </div>
+        </div>
+        {{/each}}
+      </div>
 		</div>
 
 	</main>

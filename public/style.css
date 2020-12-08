@@ -27,9 +27,6 @@ header h1 {
   flex-wrap: wrap;
   justify-content: space-around;
 }
-.feed article {
-  width: 25%;
-}
 .feed article img {
   max-width: 300px;
   max-height: 200px;
@@ -233,6 +230,23 @@ textarea {
 .feedback-feed .feedback-item .header {
   display: flex;
   justify-content: space-between;
+  align-items: flex-end;
+}
+.feedback-feed .feedback-item .header h4, .feedback-feed .feedback-item .header h5 {
+  margin: 0;
+}
+.feedback-feed .feedback-item .content {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.5em;
+}
+.feedback-feed .feedback-item .content .rating {
+  margin-left: 1em;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
 }
 .feedback-feed .comment {
   margin: 1em 0;
