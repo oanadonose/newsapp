@@ -51,7 +51,7 @@
 			<h1>{{article.title}}</h1>
 			<div class="sub-heading">
 				<h4>by {{article.user}}</h4>
-				<h5>{{article.updated_at}}</h5>
+				<h5>{{format article.updated_at}}</h5>
 			</div>
 			<img src="../images/{{article.photo}}"></img>
 			<div class="article-body">{{article.article}}</div>
@@ -76,7 +76,7 @@
 			<div class="feedback-item">
 				<div class="header">
 					<h4>{{this.name}}</h4>
-					<h5>{{this.updated_at}}</h5>
+					<h5>{{format this.updated_at}}</h5>
 				</div>
 				{{#if (eq this.rating 5)}}
 				<div>

@@ -23,6 +23,7 @@ const articleReleasedPts = 15
 //helpers for hbs
 helpers.comparison()
 
+
 /**
  * Article details page
  *
@@ -35,12 +36,10 @@ newsRouter.get('/:newsid(\\d+)', async ctx => {
 		let article = await findNewsById(ctx.params.newsid)
 		const articleOwner = await findUserById(article.userid)
 		article = { ... article, user: articleOwner.name }
-
 		//create owner variable to check in hbs
 		const owner = article.userid === ctx.session.userid
 		//find article feedback
 		const feedbackItems = await getNewsFeedback(ctx.params.newsid)
-		console.log('feedbackItems', feedbackItems)
 		//add article info to hbs
 		//add owner property in order to display edit button
 		ctx.hbs = { ...ctx.hbs, article, owner, feedbackItems}
