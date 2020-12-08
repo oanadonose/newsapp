@@ -10,10 +10,15 @@ const saltRounds = 10
 //remove asyncs? 11
 
 export const register = async(user) => {
-	if(!user.password || !user.name || !user.email) return 0
-	const pass = await bcrypt.hash(user.password, saltRounds)
-	user.password = pass
-	return await db('users').insert(user, ['id', 'name'])
+	if(!user.password || !user.name || !user.email) throw new Error('missing field')
+	try {
+    const pass = await bcrypt.hash(user.password, saltRounds)
+    user.password = pass
+    const id = await db('users').insert(user, ['id'])
+    return id
+  } catch (err) {
+    console.log(err)
+  }
 }
 
 export const login = async(name, password) => {

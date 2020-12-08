@@ -1,14 +1,31 @@
-module.exports = {
+export default {
   
   migrations: {
     directory: './migrations',
-    loadExtensions: ['.js']
+    loadExtensions: ['.js','.cjs', '.mjs']
+  },
+  seeds: {
+    directory: './seeds',
+    loadExtensions: ['.js', '.cjs', '.mjs']
   },
 
   development: {
     client: 'sqlite3',
     connection: {
       filename: './website.db'
+    },
+    useNullAsDefault: true,
+    pool: {
+      afterCreate: (conn, done) => {
+        conn.run("PRAGMA foreign_keys = ON", done);
+      }
+    }
+  },
+  
+  test: {
+    client: 'sqlite3',
+    connection: {
+      filename: './test.db'
     },
     useNullAsDefault: true,
     pool: {

@@ -11,7 +11,10 @@
 		"verbose": true,
 		"require": [
 			"esm"
-		]
+		],
+    "environmentVariables": {
+      "DB_ENVIRONMENT": "test"
+    }
 	},
 	"scripts": {
 		"packagedeps": "./node_modules/.bin/depcheck .",
@@ -46,6 +49,7 @@
 	},
 	"devDependencies": {
 		"ava": "^3.12.1",
+		"cross-env": "^7.0.3",
 		"depcheck": "^1.2.0",
 		"dependency": "0.0.1",
 		"dependency-check": "^4.1.0",

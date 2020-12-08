@@ -13,7 +13,6 @@ exports.up = function(knex) {
        .notNullable()
        .defaultTo(0)
     tbl.integer('admin')
-       .notNullable()
        .defaultTo(0)
     tbl.integer('subscribed')
        .notNullable()
