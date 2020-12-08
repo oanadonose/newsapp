@@ -2,7 +2,8 @@ import Router from 'koa-router'
 import helpers from 'handlebars-helpers'
 import nodemailer from 'nodemailer'
 import { generateMailOpts } from '../helpers/mail.js'
-import { addNews, findNewsById, findNewsByStatus, findUserById, editNews, editUser } from '../modules/dbHelpers.js'
+import { addNews, findNewsById, findNewsByStatus, findUserById,
+	editNews, editUser, getNewsFeedback } from '../modules/dbHelpers.js'
 import mime from 'mime-types'
 import fs from 'fs-extra'
 
@@ -38,11 +39,11 @@ newsRouter.get('/:newsid(\\d+)', async ctx => {
 		//create owner variable to check in hbs
 		const owner = article.userid === ctx.session.userid
 		//find article feedback
-		//const feedbackItems = await feedback.getByNewsId(ctx.params.newsid)
-		//
+		const feedbackItems = await getNewsFeedback(ctx.params.newsid)
+		console.log('feedbackItems', feedbackItems)
 		//add article info to hbs
 		//add owner property in order to display edit button
-		ctx.hbs = { ...ctx.hbs, article, owner}
+		ctx.hbs = { ...ctx.hbs, article, owner, feedbackItems}
 		await ctx.render('article', ctx.hbs)
 	} catch (err) {
 		ctx.hbs.msg = err.message

@@ -25,19 +25,26 @@ export const login = async(name, password) => {
 		.first()
 }
 
-export const findUsers = async() => db('users')
+export const findUsers = () => db('users')
 	.orderBy('points', 'desc')
 
-export const findUserById = async(id) => db('users')
+export const findUserById = (id) => db('users')
 	.where({ id })
 	.first()
 
-export const findByName = async(name) => db('users')
+//select users.id, users.points from users inner join news on users.id=news.userid;
+export const findArticleOwner = async(id) => await db('users')
+	.join('news', 'news.userid', '=', 'users.id')
+	.select('users.id', 'users.points')
+	.where('users.id','=',id)
+	.first()
+
+export const findByName = (name) => db('users')
 	.where({ name })
 	.first()
 
 
-export const remove = async(id) => db('users')
+export const remove = async(id) => await db('users')
 	.where({ id })
 	.del()
 
@@ -61,13 +68,26 @@ export const addNews = async(userid, news) => await db('news')
 	.insert(news, ['id','title','userid'])
 
 export const editNews = async(id, changes) => {
-  await db('news')
-    .where({ id })
-    .update(changes)
-  return findNewsById(id) 
+	await db('news')
+		.where({ id })
+		.update(changes)
+	return findNewsById(id)
 }
 
 export const findUserNews = (userid) => db('news')
 	.where({ userid })
 
 export const getAllNews = async() => db('news')
+
+export const getNewsFeedback = (newsid) => db('feedback')
+	.join('users', 'feedback.userid','=','users.id')
+	.select('feedback.comment',
+		'feedback.rating',
+		'feedback.updated_at',
+		'users.name'
+	)
+	.where({ newsid })
+	.orderBy('feedback.updated_at', 'desc')
+
+export const addFeedback = async(feedback) => await db('feedback')
+	.insert(feedback, ['id'])
