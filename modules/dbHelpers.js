@@ -8,33 +8,49 @@ import bcrypt from 'bcrypt-promise'
 const saltRounds = 10
 
 //remove asyncs? 11
-
+export const validate = async(user) => {
+	if(!user.password || !user.name || !user.email) return false
+	const findUser = await findUserByEmail(user.email)
+	if(findUser) return false
+	return true
+}
 export const register = async(user) => {
-	if(!user.password || !user.name || !user.email) throw new Error('missing field')
+	const isvalid = await validate(user)
+	if(!isvalid) throw new Error('could not validate user')
 	try {
 		const pass = await bcrypt.hash(user.password, saltRounds)
 		user.password = pass
-		const id = await db('users').insert(user, ['id'])
-		return id
+		const id = await db('users').insert(user)
+		return findUserById(id)
 	} catch (err) {
 		console.log(err)
+		throw new Error('sql error')
 	}
 }
 
+export const findByName = async(name) => await db('users')
+	.where({ name })
+	.select('id','name','email','password')
+	.first()
+
 export const login = async(name, password) => {
 	const user = await findByName(name)
+	if(!user) throw new Error('invalid user name')
 	const valid = await bcrypt.compare(password, user.password)
-	if (valid === false) throw new Error(`invalid password for account "${name}"`)
-	return db('users')
-		.where({ name, password })
-		.first()
+	if (valid === false) throw new Error('invalid password')
+	return true
 }
 
-export const findUsers = () => db('users')
+export const findUsers = async() => await db('users')
 	.orderBy('points', 'desc')
 
-export const findUserById = (id) => db('users')
+export const findUserById = async(id) => await db('users')
 	.where({ id })
+	.select('id','name','email')
+	.first()
+
+export const findUserByEmail = async(email) => await db('users')
+	.where({ email })
 	.first()
 
 //select users.id, users.points from users inner join news on users.id=news.userid;
@@ -42,10 +58,6 @@ export const findArticleOwner = async(id) => await db('users')
 	.join('news', 'news.userid', '=', 'users.id')
 	.select('users.id', 'users.points')
 	.where('users.id','=',id)
-	.first()
-
-export const findByName = (name) => db('users')
-	.where({ name })
 	.first()
 
 
@@ -68,9 +80,12 @@ export const findNewsById = (id) => db('news')
 export const findNewsByStatus = (status) => db('news')
 	.where({ status })
 
-export const addNews = async(userid, news) => await db('news')
-	.where({ userid })
-	.insert(news, ['id','title','userid'])
+export const addNews = async(userid, news) => {
+	if(!news.title || !news.article || !news.photo) throw new Error('missing field')
+	return await db('news')
+		.where({ userid })
+		.insert(news, ['id'])
+}
 
 export const editNews = async(id, changes) => {
 	await db('news')
@@ -94,5 +109,8 @@ export const getNewsFeedback = (newsid) => db('feedback')
 	.where({ newsid })
 	.orderBy('feedback.updated_at', 'desc')
 
-export const addFeedback = async(feedback) => await db('feedback')
-	.insert(feedback, ['id'])
+export const addFeedback = async(feedback) => {
+	if(!feedback.rating) throw new Error('missing rating')
+	return await db('feedback')
+		.insert(feedback, ['id'])
+}

@@ -1,6 +1,6 @@
-import * as knex from "knex";
+const knex = require('knex')
 
-export const seed = async(knex) => {
+exports.seed = function(knex) {
     // Deletes ALL existing entries
     await knex("users").del();
     // Inserts seed entries

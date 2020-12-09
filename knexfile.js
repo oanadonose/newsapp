@@ -6,7 +6,7 @@ export default {
 	},
 	seeds: {
 		directory: './seeds',
-		loadExtensions: ['.js', '.cjs', '.mjs']
+		loadExtensions: ['.cjs']
 	},
 
 	development: {
@@ -24,6 +24,10 @@ export default {
 
 	test: {
 		client: 'sqlite3',
+		seeds: {
+			directory: './seeds',
+			loadExtensions: ['.cjs']
+		},
 		connection: {
 			filename: './test.db'
 		},
