@@ -1,46 +1,58 @@
+# Completed stage 1, 2 and 3 functionality
+## https://donoseo-sem1.herokuapp.com/
 
-# Assignment Code
+## Stage 1
 
-This is the template code that you will need to use as a starting point for your coursework.
+The core functionality consists of three screens.
 
-You should make sure you are accessing Codio using a standards-compliant web browser such as **Google Chrome** or **Chromium**.
+### Part 1
 
-## Running Your Server
+A home page tha should be visible even if a `user` is not logged in. This should display  summaries of all the news articles, each should show:
 
-All the core packages have already been installed so all you need to do to get your server running is to open the **terminal** from the **Tools** menu (if it is not already open) and run the following command:
+1. The title.
+2. A thumbnail photo.
+3. The date added (with the most recent at the top) in the format DD/MM/YYYY.
 
-```shell
-$ node index.js
-```
+### Part 2
 
-This will start your web server. To view your website click on the dropdown list labelled **Live Site** at the top of the Codio window and choose the **New browser tab** option. This will open your website in a new tab.
+If the `user` is logged in they should see an **add news** link or button on the homepage that takes the user to the **Add News** page where they can add a new article, this should include:
 
-To make life easier you can split your editor window both horizontally and/or vertically so you can see both the code and the terminal. Use the **View > Panels** and **View > Layout** menus.
+1. The title.
+2. A photo uploaded from their computer.
+3. A detailed, multi-line, formatted news article.
 
-## Setting up a Git Repository
+### Part 3
 
-As part of the assignment you are expected to make regular commits to your git repository. Follow this step by step guide:
+Whether a `user` is logged in or not, if they click on a photo or title on the home page they should be taken to a news item page where they will be able to read the article in full, including:
 
-### Local Config Settings
+1. The title.
+2. The full-sized photo.
+3. The username of the author.
+4. The date added shown in the format DD/MM/YYYY.
+5. The multi-paragraph, formatted news article.
 
-Before you make any commits you need to update the [local config settings](https://git-scm.com/book/en/v2/Getting-Started-First-Time-Git-Setup). Start by using the Terminal (or Git Bash on Windows) navigate inside the project. Once you are in this directory run the following commands, substituting you name as it appears on your ID badge and your university email address (without the `uni.` domain prefix).
+---
 
-```bash
-git config user.name 'John Doe'
-git config user.email 'doej@coventry.ac.uk'
-```
+## Stage 2
 
-### Create a New Remote Repository
+The intermediate tasks require you to make changes to the functionality:
 
-1. Log onto the [University GitHub server](https://github.coventry.ac.uk) using your University username and password.
-2. Your assignment brief will give you the _organisation url_, this will take you to the module page on GitHub.
-3. Create a new repository using the green **New** button:
-    1. The name of the repository should be your university username, eg. `doej` and should include the suffix of either `-sem1`, `-sem2` or `-sem3` depending on which semester you are taking the assignment in, eg. `doej-sem1`.
-    2. The description should be the topic you were assigned (eg. **Customer Relationship Manager**).
-    3. The repository should be **private**.
-4. Now follow the instructions git provides under the heading **create a new repository on the command line**.
-    1. Don't run the first `echo` command as this will delete these instructions!
+1. All new articles should be marked as pending and hidden from the public's view until an `admin` person logs in, checks the content and flags it as released.
+2. `users` can edit existing articles but this will reflag them as pending.
+3. When the article is released, the `user` who posted the article should receive an email telling them the article is live, including the article title and with a link to the details page.
+4. The `user` should be prompted if they try to add or edit an article with missing fields.
 
-## Working With SQLite
+---
 
-The SQLite3 commandline tool is already installed and should be used to configure your database.
+## Stage 3
+
+1. `Users` can provide feedback on articles:
+    1. Users who view an article are given the option to rate it on a scale of 1-5 stars.
+    2. They can also supply a formatted, multiline feedback comment.
+2. To encourage people to get involved you will implement some gamification by awarding points for positive behaviours:
+    1. `Users` who post an article get 10 points per article rising to 25 points when the article gets approved by admin.
+    2. They get the star rating for each piece of feedback added as points.
+    3. The home screen should display the top 10 users with the highest scores.
+3. `users` can subscribe to a daily news digest which gets sent out each morning and contains the following information for all news articles approved over the last 24 hours:
+    1. The title, summary and date/time.
+    2. A link to the online article summary page.
