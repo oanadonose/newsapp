@@ -6,6 +6,7 @@ import { register, findUsers, findNewsByStatus, findByName, login, findUserNews 
 const publicRouter = new Router()
 publicRouter.use(bodyParser({ multipart: true }))
 
+const leaderboardsCount = 10
 
 /**
  * The secure home page.
@@ -17,7 +18,7 @@ publicRouter.get('/', async ctx => {
 	try {
 		const news = await findNewsByStatus('released')
 		const leaders = await findUsers()
-    leaders.splice(10)
+		leaders.splice(leaderboardsCount)
 		ctx.hbs = { ...ctx.hbs, news, leaders}
 		await ctx.render('index', ctx.hbs)
 	} catch (err) {
