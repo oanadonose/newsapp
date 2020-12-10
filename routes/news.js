@@ -211,10 +211,12 @@ newsRouter.post('/add/:newsid(\\d+)', async ctx => {
 		let changes = {
 			title: ctx.request.body.title,
 			article: ctx.request.body.article,
+			status: 'pending'
 		}
 		if(filename) {
 			changes = {...changes, photo: filename}
 		}
+
 		await editNews(ctx.params.newsid, changes)
 		return ctx.redirect('/?msg=article edited successfully')
 	} catch (err) {

@@ -9,25 +9,27 @@
 	<meta name="author" content="Mark Tyers">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link href="{{host}}/style.css" type="text/css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<script type="module" src="main.js"></script>
 </head>
 
 <body>
 	<header>
 		<h1><a href="/">Local News</a></h1>
-		<div class="header-buttons">
-			{{#if admin}}
-        <a href="/news/pending">Pending</a>
-        <a href="/news/revision">Revision</a>
+    <button id="hamburger"><i class="fa fa-bars"></i></button>
+      <ul>
+        {{#if admin}}
+        <li><a href="/news/pending">Pending</a></li>
 			{{/if}}
 			{{#if authorised}}
-        <a href="/users/{{userid}}">User news</a>
-        <a href="/news/add">Add news</a>
-        <a href="/logout">Log out</a>
+         <li><a href="/users/{{userid}}">User news</a></li>
+         <li><a href="/news/add">Add news</a></li>
+         <li><a href="/logout">Log out</a></li>
 			{{else}}
-        <a href="/login">Log in</a>
+         <li><a href="/login">Log in</a></li>
+         <li><a href="/register">Register</a></li>
 			{{/if}}
-		</div>
+      </ul>	
 	</header>
 	<div class="msg">
 		{{#if msg}}
