@@ -29,7 +29,7 @@ cron.schedule('0 0 * * *', async() => {
 	//get subscribed users from db
 	const subscribedUsers = await getSubscribedUsers()
 	console.log('subscribedUsers',subscribedUsers)
-	//get top 3 news from db
+	//get top 7 news from db
 	const topNews = await getAllNews()
 	console.log('topNews',topNews)
 	//generate email and send

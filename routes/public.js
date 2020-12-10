@@ -17,6 +17,7 @@ publicRouter.get('/', async ctx => {
 	try {
 		const news = await findNewsByStatus('released')
 		const leaders = await findUsers()
+    leaders.splice(10)
 		ctx.hbs = { ...ctx.hbs, news, leaders}
 		await ctx.render('index', ctx.hbs)
 	} catch (err) {
