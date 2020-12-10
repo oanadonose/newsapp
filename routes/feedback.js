@@ -18,7 +18,6 @@ feedbackRouter.post('/:newsid(\\d+)', async ctx => {
 		comment: ctx.request.body.comment
 	}
 	const articleOwner = await findUserByNews(newFeedback.newsid)
-  console.log(articleOwner)
 	try {
 		await addFeedback(newFeedback)
 		const updates = {

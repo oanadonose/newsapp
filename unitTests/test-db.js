@@ -20,11 +20,6 @@ test.before(async() => {
 	console.log('refresh db')
 })
 
-// test.beforeEach(async() => {
-//   await db.migrate.rollback()
-// 	await db.migrate.latest()
-// })
-
 // //delete users data after each test
 test.afterEach(async() => {
 	await db('users').truncate()

@@ -2,6 +2,8 @@ import test from 'ava'
 import {addNews, findNewsById, editNews} from '../modules/dbHelpers.js'
 import db from '../dbConfig.js'
 
+//.returning() is necessary for postgres in production
+
 const news = {
 	title: 'Test title',
 	article: 'test article',

@@ -7,21 +7,9 @@ import nodemailer from 'nodemailer'
 
 import { apiRouter } from './routes/routes.js'
 
-import Accounts from './modules/accounts.js'
-import News from './modules/news.js'
-
 import cron from 'node-cron'
 import { subscriptionMailOpts } from './helpers/mail.js'
-
-
-// const pool = new Pool({
-//   connectionString: process.env.DATABASE_URL,
-//   ssl: {
-//     rejectUnauthorized: false
-//   }
-// });
-
-const dbName = 'website.db'
+import { getSubscribedUsers, getAllNews } from './modules/dbHelpers.js'
 
 const transporter = nodemailer.createTransport({
 	service: 'gmail',
@@ -32,14 +20,18 @@ const transporter = nodemailer.createTransport({
 })
 
 //every day at midnight task
+//-note won't work on heroku unless app is pinged around this time
+////-apps sleep after inactivity
+//cron args {minute hour day(month) month day(week)}
 cron.schedule('0 0 * * *', async() => {
-	const count = 3
-	const accounts = await new Accounts(dbName)
-	const news = await new News(dbName)
+	const count = 7
+	console.log('cron')
 	//get subscribed users from db
-	const subscribedUsers = await accounts.getSubscribedUsers()
+	const subscribedUsers = await getSubscribedUsers()
+	console.log('subscribedUsers',subscribedUsers)
 	//get top 3 news from db
-	const topNews = await news.all()
+	const topNews = await getAllNews()
+	console.log('topNews',topNews)
 	//generate email and send
 	subscribedUsers.forEach(subscribedUser => {
 		const mailOpts = subscriptionMailOpts(subscribedUser, topNews, count)

@@ -1,13 +1,8 @@
-// import knex from 'knex'
-// import config from '../knexfile.cjs'
-// const db = knex(config.development)
-
 import db from '../dbConfig.js'
 import bcrypt from 'bcrypt-promise'
 
 const saltRounds = 10
 
-//remove asyncs? 11
 export const validate = async(user) => {
 	if(!user.password || !user.name || !user.email) return false
 	const findUser = await findUserByEmail(user.email)
@@ -51,22 +46,18 @@ export const findUserById = async(id) => await db('users')
 
 //select users.id, users.points from users inner join news on users.id=news.userid where news.id=id;
 export const findUserByNews = async(id) => await db('news')
-  .join('users', 'users.id','=','news.userid')
-  .select('users.id','users.points')
-  .where('news.id','=',id)
-  .first()
+	.join('users', 'users.id','=','news.userid')
+	.select('users.id','users.points')
+	.where('news.id','=',id)
+	.first()
 
 export const findUserByEmail = async(email) => await db('users')
 	.where({ email })
 	.first()
 
-//select users.id, users.points from users inner join news on users.id=news.userid;
-// export const findArticleOwner = async(id) => await db('users')
-// 	.join('news', 'news.userid', '=', 'users.id')
-// 	.select('users.id', 'users.points')
-// 	.where('users.id','=',id)
-// 	.first()
-
+export const getSubscribedUsers = async() => await db('users')
+	.where('subscribed','=',1)
+	.select('email','name','id')
 
 export const remove = async(id) => await db('users')
 	.where({ id })
@@ -79,14 +70,13 @@ export const editUser = async(id, changes) => {
 	return findUserById(id)
 }
 
-
 export const findNewsById = (id) => db('news')
 	.where({ id })
 	.first()
 
 export const findNewsByStatus = (status) => db('news')
 	.where({ status })
-  .orderBy('updated_at','desc')
+	.orderBy('updated_at','desc')
 
 export const addNews = async(userid, news) => {
 	if(!news.title || !news.article || !news.photo) throw new Error('missing field')
@@ -105,7 +95,7 @@ export const editNews = async(id, changes) => {
 export const findUserNews = async(userid) => await db('news')
 	.where({ userid })
 
-export const getAllNews = async() => db('news')
+export const getAllNews = async() => db('news').orderBy('updated_at','desc')
 
 export const getNewsFeedback = (newsid) => db('feedback')
 	.join('users', 'feedback.userid','=','users.id')
