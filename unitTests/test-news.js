@@ -1,119 +1,115 @@
 import test from 'ava'
-import News from '../modules/news.js'
+import {addNews, findNewsById, editNews} from '../modules/dbHelpers.js'
+import db from '../dbConfig.js'
 
-test('ADD NEW ARTICLE: successfully create a new article', async test => {
-	test.plan(1)
-	const news = await new News()
-	const fakeNews = {
-		account: '3',
-		title: 'Fake News',
-		article: 'This is a fake article.',
-		dateAdded: Math.floor(Date.now() / 1000)
-	}
-	try {
-		const add = await news.add(fakeNews)
-		test.is(add, true, 'unable to add news')
-	} catch(err) {
-		test.is(err.message, '' , 'incorrect error message')
-	} finally {
-		news.close()
-	}
+//.returning() is necessary for postgres in production
 
+const news = {
+	title: 'Test title',
+	article: 'test article',
+	photo: 'test.jpg',
+	userid: 1
+}
 
+//refresh data in test db before test suite starts
+test.before(async() => {
+	await db.migrate.rollback()
+	await db.migrate.latest()
+	console.log('refresh db')
+	await db('users').insert([
+		{ name: 'test1', email: 'test1@mail.com', password: 'test1' },
+		{ name: 'test2', email: 'test2@mail.com', password: 'test2' },
+		{ name: 'testadmin', email: 'testadmin@mail.com', password: 'testadmin', admin: 1 }
+	])
+	console.log('add users data')
 })
 
-test('ADD NEW ARTICLE: missing title field', async test => {
+
+test.afterEach(async() => {
+	await db('news').truncate()
+})
+
+
+test('ADD ARTICLE: success', async test => {
 	test.plan(1)
-	const news = await new News()
-	try {
-		await news.add({title: '', article: 'test body'})
+	const res = await addNews(news.userid, news)
+	test.deepEqual(res,[1],'incorrect')
+})
+
+test('ADD ARTICLE: missing title', async test => {
+	test.plan(1)
+	try{
+		await addNews(news.userid,
+			{
+				title: '',
+				article: news.article,
+				photo: news.photo,
+				userid: news.userid
+			})
 		test.fail('error not thrown')
 	} catch(err) {
-		test.is(err.message, 'missing title', 'incorrect error message')
-	} finally {
-		news.close()
+		test.is(err.message,'missing field','incorrect error')
 	}
 })
 
-test('ADD NEW ARTICLE: missing article body', async test => {
+test('ADD ARTICLE: missing article', async test => {
 	test.plan(1)
-	const news = await new News()
-	try {
-		await news.add({title: 'test title',article: ''})
+	try{
+		await addNews(news.userid, {title: news.title,article: '', photo: news.photo, userid: news.userid})
 		test.fail('error not thrown')
 	} catch(err) {
-		test.is(err.message, 'missing article body', 'incorrect error message')
-	} finally {
-		news.close()
+		test.is(err.message,'missing field','incorrect error')
 	}
 })
 
-test('EDIT ARTICLE: succesfully edit article', async test => {
+test('ADD ARTICLE: missing photo', async test => {
 	test.plan(1)
-	const news = await new News()
-	const updated = {
-		title: 'update test',
-		article: 'update test',
-		photo: 'update.jpeg',
-		newsid: '1'
-	}
-	try {
-		const edit = await news.edit(updated)
-		test.is(edit, true, 'unable to add news')
-	} catch(err) {
-		test.is(err.message, 'test', 'incorrect error message')
-	} finally {
-		news.close()
-	}
-})
-
-test('EDIT ARTICLE: missing article title', async test => {
-	test.plan(1)
-	const news = await new News()
-	const updated = {
-		title: '',
-		article: 'update test',
-		photo: 'update.jpeg',
-		newsid: '1'
-	}
-	try {
-		await news.edit(updated)
+	try{
+		await addNews(news.userid, {
+			title: news.title,
+			article: news.article,
+			photo: '',
+			userid: news.userid
+		})
 		test.fail('error not thrown')
 	} catch(err) {
-		test.is(err.message, 'missing title', 'inocrrect error message')
-	} finally {
-		news.close()
+		test.is(err.message,'missing field','incorrect error')
 	}
 })
 
-test('EDIT ARTICLE: missing article body', async test => {
-	test.plan(1)
-	const news = await new News()
-	const updated = {
-		title: 'Test',
-		article: '',
-		photo: 'update.jpeg',
-		newsid: '1'
-	}
-	try {
-		await news.edit(updated)
-		test.fail('error not thrown')
-	} catch(err) {
-		test.is(err.message, 'missing article body', 'inocrrect error message')
-	} finally {
-		news.close()
-	}
+test('FIND NEWS BY ID: find', async test => {
+	test.plan(3)
+	await addNews(news.userid, news)
+	const res = await findNewsById(1)
+	test.is(res.title, news.title, 'incorrect')
+	test.is(res.article, news.article, 'incorrect')
+	test.is(res.userid, news.userid, 'incorrect')
 })
 
-test('DELETE ARTICLE: successfully delete', async test => {
+test('EDIT NEWS: title edit success', async test => {
 	test.plan(1)
-	const news = await new News()
-	try {
-		const remove = await news.updateStatus('1', 'archived')
-		test.is(remove, true, 'unable to delete news')
-	} catch (err) {
-		test.is(err.message, 'test', 'incorrect error message')
-	} finally {
-		news.close()
-	}
+	await addNews(news.userid, news)
+	const res = await editNews(1, {title: 'new title'})
+	test.is(res.title, 'new title' , 'incorrect')
+})
+
+test('EDIT NEWS: article edit success', async test => {
+	test.plan(1)
+	await addNews(news.userid, news)
+	const res = await editNews(1, {article: 'new article'})
+	test.is(res.article, 'new article' , 'incorrect')
+})
+
+test('EDIT NEWS: photo edit success', async test => {
+	test.plan(1)
+	await addNews(news.userid, news)
+	const res = await editNews(1, {photo: 'new photo'})
+	test.is(res.photo, 'new photo' , 'incorrect')
+})
+
+test('EDIT NEWS: change status', async test => {
+	test.plan(1)
+	await addNews(news.userid, news)
+	const res = await editNews(1, {status: 'tested'})
+	test.is(res.status, 'tested', 'incorrect')
 })

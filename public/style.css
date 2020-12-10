@@ -1,22 +1,61 @@
 @import url("https://fonts.googleapis.com/css2?family=PT+Serif&display=swap");
+@import url(https://fonts.googleapis.com/css?family=Cantora+One);
 header {
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   align-items: baseline;
   justify-content: space-between;
-  padding: 1em;
+  padding: 0.5em;
 }
 header a {
   text-decoration: none;
-  margin-right: 1em;
 }
 header h1 {
   font-size: 1.4em;
+  flex-grow: 2;
 }
-
-.header-buttons {
-  display: flex;
+header ul {
+  list-style: none;
+  display: none;
+  width: 100%;
+  height: 50px;
   flex-direction: row;
+  align-items: center;
+  justify-content: space-evenly;
+  background-color: rgba(0, 0, 0, 0.2);
+  margin: 0;
+  padding: 0.5em;
+  border-radius: 0.5em;
+  border: none;
+}
+@media screen and (min-width: 700px) {
+  header ul {
+    display: flex;
+    width: 70%;
+  }
+}
+header ul li {
+  text-decoration: none;
+}
+header ul li a {
+  color: #0e1c66;
+}
+header ul li a:hover {
+  color: #FF7A00;
+}
+header ul li a.active {
+  color: #B25500;
+  font-style: italic;
+}
+header #hamburger {
+  width: 30px;
+  height: 30px;
+  float: right;
+  margin: 10px;
+  font-size: 20px;
+  border-radius: 4px;
+  padding: 0.2em;
 }
 
 .feed {
@@ -27,8 +66,8 @@ header h1 {
   flex-wrap: wrap;
   justify-content: space-around;
 }
-.feed article {
-  width: 25%;
+.feed a {
+  text-decoration: none;
 }
 .feed article img {
   max-width: 300px;
@@ -43,6 +82,7 @@ header h1 {
   }
 }
 article {
+  cursor: pointer;
   max-width: 80%;
   margin: 1em;
   background-color: rgba(211, 211, 211, 0.4);
@@ -100,16 +140,17 @@ h2 {
 }
 
 aside {
-  margin: 2em;
+  margin: 1em;
   max-height: fit-content;
 }
 @media screen and (min-width: 1000px) {
   aside {
-    width: 15%;
+    width: 18%;
   }
 }
 aside .leaderboards {
   min-width: 170px;
+  max-width: 20%;
 }
 aside .leaderboards .title-bar {
   display: flex;
@@ -127,6 +168,7 @@ aside .leaderboards .leader-row, aside .leaderboards .header {
 }
 aside .leaderboards .leader-row p, aside .leaderboards .header p {
   padding: 0.5em;
+  margin: 0;
 }
 aside .leaderboards .header {
   border-radius: 1em 1em 0 0;
@@ -233,6 +275,23 @@ textarea {
 .feedback-feed .feedback-item .header {
   display: flex;
   justify-content: space-between;
+  align-items: flex-end;
+}
+.feedback-feed .feedback-item .header h4, .feedback-feed .feedback-item .header h5 {
+  margin: 0;
+}
+.feedback-feed .feedback-item .content {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.5em;
+}
+.feedback-feed .feedback-item .content .rating {
+  margin-left: 1em;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
 }
 .feedback-feed .comment {
   margin: 1em 0;

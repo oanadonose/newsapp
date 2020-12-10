@@ -9,31 +9,38 @@
 		<meta name="author" content="Mark Tyers">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<link href="{{host}}/style.css" type="text/css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script type="module" src="../main.js"></script>
 	</head>
 	<body>
 		<header>
-			<h1><a href="/">Local News</a></h1>
-			<div class="header-buttons">
-				{{#if authorised}}
-					<a href="/news/add">Add news</a>
-					<a href="/logout">Log out</a>
-				{{else}}
-					<a href="/login">Log in</a>
-				{{/if}}
-			</div>
-		</header>
+		<h1><a href="/">Local News</a></h1>
+		<button id="hamburger"><i class="fa fa-bars"></i></button>
+    <ul>
+      {{#if admin}}
+      <li><a href="/news/pending">Pending</a></li>
+    {{/if}}
+    {{#if authorised}}
+       <li><a class="active" href="/users/{{userid}}">User news</a></li>
+       <li><a href="/news/add">Add news</a></li>
+       <li><a href="/logout">Log out</a></li>
+    {{else}}
+       <li><a href="/login">Log in</a></li>
+       <li><a href="/register">Register</a></li>
+    {{/if}}
+    </ul>	
+	</header>
 		{{#if msg}}
  			<p class="msg">{{msg}}</p>
 		{{/if}}
 	<main>
-		<p>This is the home page. Users can see it without logging in.</p>
 		<div class="feed">
 			{{#each news}}
-				<article>
-					<h2><a href="/news/{{this.id}}">{{this.title}}</a></h2>
-					<p class="date">{{this.dateAdded}}</p>
+				<a href="/news/{{this.id}}"><article>
+					<h2>{{this.title}}</h2>
+					<p class="date">{{format this.updated_at}}</p>
 					<div><img src="../images/{{this.photo}}"></img></div>
-				</article>
+				</article></a>
 			{{/each}}
 		</div>
 		

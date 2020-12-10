@@ -16,10 +16,12 @@ export const generateMailOpts = (article, id) => {
 }
 
 const genHtml = (articles, count) => {
+	if(articles.length < count) count = articles.length
 	let html = `<h1>Hello</h1>
 	<p>Here's the top ${count} news of the day: <p>
 	`
 	for(let i=0;i<count;i++) {
+		console.log('articles {i}', articles[i])
 		html = `${html}<div>
 		<h2>${articles[i].title}</h2>
 		<h4>by ${articles[i].user}</h4>

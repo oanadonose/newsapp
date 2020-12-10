@@ -4,17 +4,32 @@
 
 <head>
 	<meta charset="utf-8">
-	<title>Home Page</title>
+	<title>Add news</title>
 	<meta name="description" content="form to add new books">
 	<meta name="author" content="Mark Tyers">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link href="{{host}}/style.css" type="text/css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script type="module" src="../main.js"></script>
 </head>
 
 <body>
 	<header>
 		<h1>Secure Page</h1>
-		<a href="/logout">Log out</a>
+    <button id="hamburger"><i class="fa fa-bars"></i></button>
+    <ul>
+      {{#if admin}}
+      <li><a href="/news/pending">Pending</a></li>
+    {{/if}}
+    {{#if authorised}}
+       <li><a href="/users/{{userid}}">User news</a></li>
+       <li><a class="active" href="/news/add">Add news</a></li>
+       <li><a href="/logout">Log out</a></li>
+    {{else}}
+       <li><a href="/login">Log in</a></li>
+       <li><a href="/register">Register</a></li>
+    {{/if}}
+    </ul>	
 	</header>
 	{{#if msg}}
 	<p class="msg">{{msg}}</p>

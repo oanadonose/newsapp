@@ -4,25 +4,32 @@
 
 <head>
 	<meta charset="utf-8">
-	<title>Home Page</title>
+	<title>{{article.title}}</title>
 	<meta name="description" content="form to add new books">
 	<meta name="author" content="Mark Tyers">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link href="{{host}}/style.css" type="text/css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script type="module" src="main.js"></script>
 </head>
 
 <body>
 	<header>
 		<h1><a href="/">Local News</a></h1>
-		<div class="header-buttons">
-
-			{{#if authorised}}
-			<a href="/news/add">Add news</a>
-			<a href="/logout">Log out</a>
-			{{else}}
-			<a href="/login">Log in</a>
+		<button id="hamburger"><i class="fa fa-bars"></i></button>
+      <ul>
+        {{#if admin}}
+        <li><a href="/news/pending">Pending</a></li>
 			{{/if}}
-		</div>
+			{{#if authorised}}
+         <li><a href="/users/{{userid}}">User news</a></li>
+         <li><a href="/news/add">Add news</a></li>
+         <li><a href="/logout">Log out</a></li>
+			{{else}}
+         <li><a href="/login">Log in</a></li>
+         <li><a href="/register">Register</a></li>
+			{{/if}}
+      </ul>	
 	</header>
 	{{#if msg}}
 	<p class="msg">{{msg}}</p>
@@ -31,14 +38,16 @@
 		{{#if admin}}
 		<aside>
 			<div>
-				{{#if (eq article.status "pending")}}
+				{{#if (isnt article.status "released")}}
 				<form action="/news/release/{{article.id}}" method="POST">
 					<button type="submit" class="admin release">Mark as released</button>
 				</form>
 				{{/if}}
+        {{#if (isnt article.status "revision")}}
 				<form action="/news/revise/{{article.id}}" method="POST">
 					<button class="admin revision">Mark for revision</button>
 				</form>
+        {{/if}}
 			</div>
 		</aside>
 		{{/if}}
@@ -49,7 +58,7 @@
 			<h1>{{article.title}}</h1>
 			<div class="sub-heading">
 				<h4>by {{article.user}}</h4>
-				<h5>{{article.dateAdded}}</h5>
+				<h5>{{format article.updated_at}}</h5>
 			</div>
 			<img src="../images/{{article.photo}}"></img>
 			<div class="article-body">{{article.article}}</div>
@@ -73,48 +82,42 @@
 			{{#each feedbackItems}}
 			<div class="feedback-item">
 				<div class="header">
-					<h4>{{this.user}}</h4>
-					<h5>{{this.dateAdded}}</h5>
+					<h4>{{this.name}}</h4>
+					<h5>{{format this.updated_at}}</h5>
 				</div>
-				{{#if (eq this.rating 5)}}
-				<div>
-					<img src="../star.svg">
-					<img src="../star.svg">
-					<img src="../star.svg">
-					<img src="../star.svg">
-					<img src="../star.svg">
-				</div>
-				{{/if}}
-				{{#if (eq this.rating 4)}}
-				<div>
-					<img src="../star.svg">
-					<img src="../star.svg">
-					<img src="../star.svg">
-					<img src="../star.svg">
-				</div>
-				{{/if}}
-				{{#if (eq this.rating 3)}}
-				<div>
-					<img src="../star.svg">
-					<img src="../star.svg">
-					<img src="../star.svg">
-				</div>
-				{{/if}}
-				{{#if (eq this.rating 2)}}
-				<div>
-					<img src="../star.svg">
-					<img src="../star.svg">
-				</div>
-				{{/if}}
-				{{#if (eq this.rating 1)}}
-				<div>
-					<img src="../star.svg">
-				</div>
-				{{/if}}
-				<div class="comment">{{this.comment}}</div>
-				</divV>
-			</div>
-			{{/each}}
+        <div class="content">
+          <div class="rating">
+            {{#if (eq this.rating 5)}}
+              <img src="../star.svg">
+              <img src="../star.svg">
+              <img src="../star.svg">
+              <img src="../star.svg">
+              <img src="../star.svg">
+            {{/if}}
+            {{#if (eq this.rating 4)}}
+              <img src="../star.svg">
+              <img src="../star.svg">
+              <img src="../star.svg">
+              <img src="../star.svg">
+            {{/if}}
+            {{#if (eq this.rating 3)}}
+              <img src="../star.svg">
+              <img src="../star.svg">
+              <img src="../star.svg">
+            {{/if}}
+            {{#if (eq this.rating 2)}}
+              <img src="../star.svg">
+              <img src="../star.svg">
+            {{/if}}
+            {{#if (eq this.rating 1)}}
+              <img src="../star.svg">
+            {{/if}}
+          </div>
+          <div class="comment">{{this.comment}}</div>
+          </div>
+        </div>
+        {{/each}}
+      </div>
 		</div>
 
 	</main>

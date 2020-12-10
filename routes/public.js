@@ -1,13 +1,12 @@
 
 import Router from 'koa-router'
 import bodyParser from 'koa-body'
+import { register, findUsers, findNewsByStatus, findByName, login, findUserNews } from '../modules/dbHelpers.js'
 
 const publicRouter = new Router()
 publicRouter.use(bodyParser({ multipart: true }))
 
-import Accounts from '../modules/accounts.js'
-import News from '../modules/news.js'
-const dbName = 'website.db'
+const leaderboardsCount = 10
 
 /**
  * The secure home page.
@@ -16,17 +15,37 @@ const dbName = 'website.db'
  * @route {GET} /
  */
 publicRouter.get('/', async ctx => {
-	const news = await new News(dbName)
-	const accounts = await new Accounts(dbName)
 	try {
-		const newsArticles = await news.all()
-		const leaders = await accounts.getUserLeaderboards()
-		ctx.hbs = { ...ctx.hbs, news: newsArticles, leaders }
+		const news = await findNewsByStatus('released')
+		const leaders = await findUsers()
+		leaders.splice(leaderboardsCount)
+		ctx.hbs = { ...ctx.hbs, news, leaders}
 		await ctx.render('index', ctx.hbs)
 	} catch (err) {
+		console.log(err)
 		await ctx.render('error', ctx.hbs)
-	} finally {
-		news.close()
+	}
+})
+
+/**
+ * User news page
+ *
+ * @name Article Page
+ * @route {GET} /users/:userid
+ */
+//(\\d+) regexp to enforce number type
+publicRouter.get('/users/:userid(\\d+)', async ctx => {
+	if(ctx.session.userid!==parseInt(ctx.params.userid))
+		return ctx.redirect('/?msg=you do not have permission to view this page')
+	try {
+		const news = await findUserNews(ctx.params.userid)
+		//add article info to hbs
+		ctx.hbs = { ...ctx.hbs, news }
+		await ctx.render('pending', ctx.hbs)
+	} catch (err) {
+		ctx.hbs.msg = err.message
+		console.log('err', err)
+		await ctx.render('error', ctx.hbs)
 	}
 })
 
@@ -46,48 +65,23 @@ publicRouter.get('/register', async ctx => await ctx.render('register'))
  * @route {POST} /register
  */
 publicRouter.post('/register', async ctx => {
-	const account = await new Accounts(dbName)
 	try {
-		await account.register(ctx.request.body.user, ctx.request.body.pass,
-			ctx.request.body.email, ctx.request.body.subscribed || 'off')
-		ctx.redirect(`/login?msg=new user "${ctx.request.body.user}" added, you need to log in`)
+		const userInfo = {
+			name: ctx.request.body.user,
+			password: ctx.request.body.pass,
+			email: ctx.request.body.email,
+			subscribed: ctx.request.body.subscribed==='on' ? 1:0
+		}
+		const res = await register(userInfo)
+		if(res===0) {
+			ctx.redirect('/login?msg=missing field error')
+		} else {
+			ctx.redirect(`/login?msg=new user "${ctx.request.body.user}" added, you need to log in`)
+		}
 	} catch (err) {
 		ctx.hbs.msg = err.message
 		ctx.hbs.body = ctx.request.body
 		await ctx.render('register', ctx.hbs)
-	} finally {
-		account.close()
-	}
-})
-/**
- * The new user validation page.
- *
- * @name Postregister Page
- * @route {GET} /postregister
- */
-publicRouter.get('/postregister', async ctx => await ctx.render('validate'))
-
-/**
- * The script to validate new user registrations.
- *
- * @name Validate Script
- * @route {GET} /validate/:user/:token
- */
-publicRouter.get('/validate/:user/:token', async ctx => {
-	try {
-		console.log('VALIDATE')
-		console.log(`URL --> ${ctx.request.url}`)
-		if (!ctx.request.url.includes('.css')) {
-			console.log(ctx.params)
-			const milliseconds = 1000
-			const now = Math.floor(Date.now() / milliseconds)
-			const account = await new Accounts(dbName)
-			await account.checkToken(ctx.params.user, ctx.params.token, now)
-			ctx.hbs.msg = `account "${ctx.params.user}" has been validated`
-			await ctx.render('login', ctx.hbs)
-		}
-	} catch (err) {
-		await ctx.render('login', ctx.hbs)
 	}
 })
 
@@ -108,23 +102,23 @@ publicRouter.get('/login', async ctx => {
  * @route {POST} /login
  */
 publicRouter.post('/login', async ctx => {
-	const account = await new Accounts(dbName)
-	ctx.hbs.body = ctx.request.body
 	try {
 		const body = ctx.request.body
-		const user = await account.login(body.user, body.pass)
-		const id = user.id
-		ctx.session.authorised = true
-		ctx.session.user = body.user
-		ctx.session.userid = id
-		ctx.session.admin = user.admin
-		const referrer = body.referrer || '/'
-		return ctx.redirect(`${referrer}?msg=you are now logged in...`)
+		const user = await findByName(body.user)
+		if(!user) {
+			return ctx.redirect('/login?msg=invalid user name')
+		} else {
+			await login(body.user, body.pass)
+			ctx.session.authorised = true
+			ctx.session.user = body.user
+			ctx.session.userid = user.id
+			ctx.session.admin = user.admin
+			const referrer = body.referrer || '/'
+			return ctx.redirect(`${referrer}?msg=you are now logged in...`)
+		}
 	} catch (err) {
 		ctx.hbs.msg = err.message
 		await ctx.render('login', ctx.hbs)
-	} finally {
-		account.close()
 	}
 })
 

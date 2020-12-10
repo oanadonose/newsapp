@@ -1,90 +1,53 @@
 import test from 'ava'
-import Feedback from '../modules/feedback.js'
+import {addFeedback} from '../modules/dbHelpers.js'
+import db from '../dbConfig.js'
 
-test('ADD FEEDBACK : successful submit no comment', async test => {
-	test.plan(1)
-	const feedback = await new Feedback()
-	const fakeFeedback = {
-		newsid: '99',
-		userid: '99',
-		rating: 3,
-	}
-	try {
-		const add = await feedback.add(fakeFeedback)
-		test.is(add, true, 'unable to add news')
-	} catch (err) {
-		test.is(err.message, '', 'incorrect error message')
-	} finally {
-		feedback.close()
-	}
+const feedback = {
+	userid: 1,
+	newsid: 1,
+	rating: 2,
+	comment: 'great!'
+}
+
+const feedback2 = {
+	userid: 2,
+	newsid: 1,
+	comment: 'meh'
+}
+
+//refresh data in test db before test suite starts
+test.before(async() => {
+	await db.migrate.rollback()
+	await db.migrate.latest()
+	console.log('refresh db')
+	await db('users').insert([
+		{ name: 'test1', email: 'test1@mail.com', password: 'test1' },
+		{ name: 'test2', email: 'test2@mail.com', password: 'test2' },
+		{ name: 'testadmin', email: 'testadmin@mail.com', password: 'testadmin', admin: 1 }
+	])
+	console.log('add users data')
+	await db('news').insert([
+		{ title: 'Test1', article: 'test1', photo: 'test1.jpg', userid: 1 },
+		{ title: 'Test2', article: 'test2', photo: 'test2.jpg', userid: 2 }
+	])
 })
 
-test('ADD FEEDBACK : successful submit with comment', async test => {
-	test.plan(1)
-	const feedback = await new Feedback()
-	const fakeFeedback = {
-		newsid: '99',
-		userid: '99',
-		rating: 3,
-		comment: 'test comment'
-	}
-	try {
-		const add = await feedback.add(fakeFeedback)
-		test.is(add, true, 'unable to add news')
-	} catch (err) {
-		test.is(err.message, '', 'incorrect error message')
-	} finally {
-		feedback.close()
-	}
+test.afterEach(async() => {
+	await db('feedback').truncate()
 })
 
-test('ADD FEEDBACK : missing rating', async test => {
+test('ADD FEEDBACK: success', async test => {
 	test.plan(1)
-	const feedback = await new Feedback()
-	const fakeFeedback = {
-		newsid: '99',
-		userid: '99',
-	}
+	const res = await addFeedback(feedback)
+	test.deepEqual(res, [1], 'incorrect')
+})
+
+test('ADD FEEDBACK: missing rating', async test => {
+	test.plan(1)
 	try {
-		await feedback.add(fakeFeedback)
+		await addFeedback(feedback2)
 		test.fail('error not thrown')
 	} catch (err) {
-		test.is(err.message, 'missing rating', 'incorrect error message')
-	} finally {
-		feedback.close()
-	}
-})
-
-test('ADD FEEDBACK : missing userid', async test => {
-	test.plan(1)
-	const feedback = await new Feedback()
-	const fakeFeedback = {
-		newsid: '99',
-		rating: 3
-	}
-	try {
-		await feedback.add(fakeFeedback)
-		test.fail('error not thrown')
-	} catch (err) {
-		test.is(err.message, 'missing user id', 'incorrect error message')
-	} finally {
-		feedback.close()
-	}
-})
-
-test('ADD FEEDBACK : missing newsid', async test => {
-	test.plan(1)
-	const feedback = await new Feedback()
-	const fakeFeedback = {
-		userid: '99',
-		rating: 3
-	}
-	try {
-		await feedback.add(fakeFeedback)
-		test.fail('error not thrown')
-	} catch (err) {
-		test.is(err.message, 'missing news id', 'incorrect error message')
-	} finally {
-		feedback.close()
+		test.is(err.message, 'missing rating', 'incorrect')
 	}
 })
