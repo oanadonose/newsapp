@@ -15,8 +15,7 @@ export const register = async(user) => {
 	try {
 		const pass = await bcrypt.hash(user.password, saltRounds)
 		user.password = pass
-		const id = await db('users').insert(user, ['id'])
-		return findUserById(id[0])
+		return await db('users').insert(user, ['id'])
 	} catch (err) {
 		console.log(err)
 		throw new Error('sql error')
