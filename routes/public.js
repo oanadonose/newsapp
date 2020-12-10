@@ -1,7 +1,7 @@
 
 import Router from 'koa-router'
 import bodyParser from 'koa-body'
-import { register, findUsers, findNewsByStatus, findByName, login } from '../modules/dbHelpers.js'
+import { register, findUsers, findNewsByStatus, findByName, login, findUserNews } from '../modules/dbHelpers.js'
 
 const publicRouter = new Router()
 publicRouter.use(bodyParser({ multipart: true }))
@@ -15,13 +15,34 @@ publicRouter.use(bodyParser({ multipart: true }))
  */
 publicRouter.get('/', async ctx => {
 	try {
-		const newsArticles = await findNewsByStatus('released')
+		const news = await findNewsByStatus('released')
 		const leaders = await findUsers()
-		console.log('leaders',leaders)
-		ctx.hbs = { ...ctx.hbs, news: newsArticles, leaders}
+		ctx.hbs = { ...ctx.hbs, news, leaders}
 		await ctx.render('index', ctx.hbs)
 	} catch (err) {
 		console.log(err)
+		await ctx.render('error', ctx.hbs)
+	}
+})
+
+/**
+ * User news page
+ *
+ * @name Article Page
+ * @route {GET} /users/:userid
+ */
+//(\\d+) regexp to enforce number type
+publicRouter.get('/users/:userid(\\d+)', async ctx => {
+	if(ctx.session.userid!==parseInt(ctx.params.userid))
+		return ctx.redirect('/?msg=you do not have permission to view this page')
+	try {
+		const news = await findUserNews(ctx.params.userid)
+		//add article info to hbs
+		ctx.hbs = { ...ctx.hbs, news }
+		await ctx.render('pending', ctx.hbs)
+	} catch (err) {
+		ctx.hbs.msg = err.message
+		console.log('err', err)
 		await ctx.render('error', ctx.hbs)
 	}
 })

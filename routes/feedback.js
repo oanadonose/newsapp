@@ -1,5 +1,5 @@
 import Router from 'koa-router'
-import { addFeedback, findArticleOwner, editUser } from '../modules/dbHelpers.js'
+import { addFeedback, findUserById, editUser } from '../modules/dbHelpers.js'
 
 export const feedbackRouter = new Router({ prefix: '/feedback' })
 
@@ -17,14 +17,17 @@ feedbackRouter.post('/:newsid(\\d+)', async ctx => {
 		rating: ctx.request.body.rating,
 		comment: ctx.request.body.comment
 	}
-	const articleOwner = await findArticleOwner(newFeedback.newsid)
+	const articleOwner = await findUserById(newFeedback.userid)
 	try {
 		await addFeedback(newFeedback)
-		await editUser(articleOwner.id, {points: articleOwner.points+ parseInt(newFeedback.rating)})
+		const updates = {
+			points: articleOwner.points + parseInt(newFeedback.rating)
+		}
+		await editUser(articleOwner.id, updates)
 		return ctx.redirect(`/news/${ctx.params.newsid}?msg=feedback added`)
 	} catch(err) {
 		console.log('err',err)
-		await ctx.render('Error', ctx.hbs)
+		await ctx.render('error', ctx.hbs)
 	}
 })
 

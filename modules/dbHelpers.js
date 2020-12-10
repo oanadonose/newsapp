@@ -30,7 +30,7 @@ export const register = async(user) => {
 
 export const findByName = async(name) => await db('users')
 	.where({ name })
-	.select('id','name','email','password')
+	.select('id','name','email','password','admin')
 	.first()
 
 export const login = async(name, password) => {
@@ -46,7 +46,7 @@ export const findUsers = async() => await db('users')
 
 export const findUserById = async(id) => await db('users')
 	.where({ id })
-	.select('id','name','email')
+	.select('id','name','email','points')
 	.first()
 
 export const findUserByEmail = async(email) => await db('users')
@@ -94,7 +94,7 @@ export const editNews = async(id, changes) => {
 	return findNewsById(id)
 }
 
-export const findUserNews = (userid) => db('news')
+export const findUserNews = async(userid) => await db('news')
 	.where({ userid })
 
 export const getAllNews = async() => db('news')

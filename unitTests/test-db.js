@@ -40,7 +40,8 @@ test('REGISTER: register new account', async test => {
 	const expect = {
 		id: 1,
 		name: account1.name,
-		email: account1.email
+		email: account1.email,
+		points: 0
 	}
 	const reg = await register(account1)
 	test.deepEqual(reg, expect, 'unable to register')
