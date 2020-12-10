@@ -38,7 +38,7 @@
 			{{#each news}}
 				<article>
 					<h2><a href="/news/{{this.id}}">{{this.title}}</a></h2>
-					<p class="date">{{this.dateAdded}}</p>
+					<p class="date">{{format this.updated_at}}</p>
 					<div><img src="../images/{{this.photo}}"></img></div>
 				</article>
 			{{/each}}

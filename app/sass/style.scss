@@ -37,8 +37,7 @@ header {
     flex-direction: row;
     align-items: center;
     justify-content: space-evenly;
-    background-color: rgba(0, 0, 0, 0.2); /* Transparent background */
-    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.2);
     margin: 0;
     padding: 0.5em;
     border-radius: 0.5em;
@@ -50,7 +49,7 @@ header {
     li {
       text-decoration: none;
       a {
-        color: #0a5160;
+        color: #0e1c66;
         &:hover {
         color: #FF7A00;
         }
@@ -79,6 +78,9 @@ header {
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: space-around;
+  a {
+    text-decoration: none;
+  }
   article {
 	  img {
 		max-width:300px;
@@ -98,6 +100,7 @@ header {
 }
 
 article {
+  cursor: pointer;
 	max-width: 80%;
 	margin: 1em;
 	background-color: rgba(211,211,211, 0.4);

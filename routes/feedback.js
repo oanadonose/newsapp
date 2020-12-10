@@ -1,5 +1,5 @@
 import Router from 'koa-router'
-import { addFeedback, findUserById, editUser } from '../modules/dbHelpers.js'
+import { addFeedback, findUserByNews, editUser } from '../modules/dbHelpers.js'
 
 export const feedbackRouter = new Router({ prefix: '/feedback' })
 
@@ -17,7 +17,8 @@ feedbackRouter.post('/:newsid(\\d+)', async ctx => {
 		rating: ctx.request.body.rating,
 		comment: ctx.request.body.comment
 	}
-	const articleOwner = await findUserById(newFeedback.userid)
+	const articleOwner = await findUserByNews(newFeedback.newsid)
+  console.log(articleOwner)
 	try {
 		await addFeedback(newFeedback)
 		const updates = {

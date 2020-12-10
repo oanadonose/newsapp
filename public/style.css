@@ -24,8 +24,6 @@ header ul {
   align-items: center;
   justify-content: space-evenly;
   background-color: rgba(0, 0, 0, 0.2);
-  /* Transparent background */
-  padding: 10px;
   margin: 0;
   padding: 0.5em;
   border-radius: 0.5em;
@@ -41,7 +39,7 @@ header ul li {
   text-decoration: none;
 }
 header ul li a {
-  color: #0a5160;
+  color: #0e1c66;
 }
 header ul li a:hover {
   color: #FF7A00;
@@ -68,6 +66,9 @@ header #hamburger {
   flex-wrap: wrap;
   justify-content: space-around;
 }
+.feed a {
+  text-decoration: none;
+}
 .feed article img {
   max-width: 300px;
   max-height: 200px;
@@ -81,6 +82,7 @@ header #hamburger {
   }
 }
 article {
+  cursor: pointer;
   max-width: 80%;
   margin: 1em;
   background-color: rgba(211, 211, 211, 0.4);

@@ -49,16 +49,23 @@ export const findUserById = async(id) => await db('users')
 	.select('id','name','email','points')
 	.first()
 
+//select users.id, users.points from users inner join news on users.id=news.userid where news.id=id;
+export const findUserByNews = async(id) => await db('news')
+  .join('users', 'users.id','=','news.userid')
+  .select('users.id','users.points')
+  .where('news.id','=',id)
+  .first()
+
 export const findUserByEmail = async(email) => await db('users')
 	.where({ email })
 	.first()
 
 //select users.id, users.points from users inner join news on users.id=news.userid;
-export const findArticleOwner = async(id) => await db('users')
-	.join('news', 'news.userid', '=', 'users.id')
-	.select('users.id', 'users.points')
-	.where('users.id','=',id)
-	.first()
+// export const findArticleOwner = async(id) => await db('users')
+// 	.join('news', 'news.userid', '=', 'users.id')
+// 	.select('users.id', 'users.points')
+// 	.where('users.id','=',id)
+// 	.first()
 
 
 export const remove = async(id) => await db('users')
@@ -79,6 +86,7 @@ export const findNewsById = (id) => db('news')
 
 export const findNewsByStatus = (status) => db('news')
 	.where({ status })
+  .orderBy('updated_at','desc')
 
 export const addNews = async(userid, news) => {
 	if(!news.title || !news.article || !news.photo) throw new Error('missing field')
